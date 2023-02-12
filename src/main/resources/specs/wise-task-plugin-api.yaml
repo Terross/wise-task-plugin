@@ -1,0 +1,126 @@
+openapi: 3.0.0
+info:
+  version: 1.0.0
+  title: Wise-task plugin api
+
+paths:
+  /plugin:
+    get:
+      summary: Get all plugins
+      operationId: getPlugins
+      responses:
+        200:
+          description: "OK"
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/plugin"
+    post:
+      summary: Create external plugin
+      operationId: createExternalPlugin
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              properties:
+                pluginInfo:
+                  $ref: "#/components/schemas/plugin"
+                pluginFile:
+                  type: string
+                  format: binary
+      responses:
+        200:
+          description: "OK"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/plugin"
+
+  /plugin/{id}:
+    parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+
+    get:
+      summary: Get plugin by id
+      operationId: getPlugin
+      responses:
+        200:
+          description: "OK"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/plugin"
+    put:
+      summary: Update plugin by id
+      operationId: updatePlugin
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              properties:
+                pluginInfo:
+                  $ref: "#/components/schemas/plugin"
+                pluginFile:
+                  type: string
+                  format: binary
+      responses:
+        200:
+          description: "OK"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/plugin"
+
+    post:
+      summary: Verify plugin by id
+      operationId: verifyPlugin
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              properties:
+                graph:
+                  type: string
+      responses:
+        200:
+          description: "OK"
+          content:
+            application/json:
+              schema:
+                properties:
+                  answer:
+                    type: boolean
+    delete:
+      summary: Delete plugin by id
+      operationId: deletePlugin
+      responses:
+        200:
+          description: "OK"
+
+components:
+  schemas:
+    plugin:
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        description:
+          type: string
+        fileName:
+          type: string
+        authorId:
+          type: string
+        pluginType:
+          type: string
+          enum: [graph]

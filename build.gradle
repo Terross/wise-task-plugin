@@ -1,0 +1,92 @@
+plugins {
+    id 'java'
+    id 'org.springframework.boot' version '3.0.2'
+    id 'io.spring.dependency-management' version '1.1.0'
+    id 'org.openapi.generator' version '6.3.0'
+}
+
+group = 'ru.leti'
+version = '1.0.0'
+sourceCompatibility = '17'
+
+configurations {
+    compileOnly {
+        extendsFrom annotationProcessor
+    }
+}
+//
+sourceSets {
+    main {
+        java {
+            srcDirs += ["${buildDir}/generated-sources"]
+        }
+    }
+}
+
+repositories {
+    mavenLocal()
+    mavenCentral()
+    maven {
+        url = uri("https://maven.pkg.github.com/Terross/wise-task-library")
+        credentials {
+            username = 'Terross'
+            password = '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' //Eternal public token for library
+        }
+    }
+}
+
+dependencies {
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation 'ru.leti:wise-task-library:1.0.1'
+
+    //OpenAPI dependencies
+    implementation 'com.google.code.findbugs:jsr305:3.0.2'
+    implementation 'com.fasterxml.jackson.dataformat:jackson-dataformat-yaml:2.14.2'
+    implementation 'com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.14.2'
+    implementation 'org.openapitools:jackson-databind-nullable:0.2.4'
+    implementation 'org.springframework.boot:spring-boot-starter-validation:3.0.2'
+    implementation 'com.fasterxml.jackson.core:jackson-databind:2.14.2'
+    implementation 'org.springdoc:springdoc-openapi-ui:1.6.14'
+    implementation 'io.swagger:swagger-annotations:1.6.8'
+    implementation 'javax.validation:validation-api:2.0.1.Final'
+    implementation 'javax.servlet:javax.servlet-api:4.0.1'
+
+    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.9.2'
+    implementation 'javax.annotation:javax.annotation-api:1.3.2'
+    compileOnly 'org.projectlombok:lombok'
+    annotationProcessor 'org.projectlombok:lombok'
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+}
+
+openApiGenerate {
+    generatorName = 'spring'
+    inputSpec = "$rootDir/src/main/resources/specs/wise-task-plugin-api.yaml".toString()
+    outputDir = "$buildDir/generated-sources".toString()
+    apiPackage = "ru.leti.wise.task.plugin.api"
+    modelPackage = "ru.leti.wise.task.plugin.model"
+    generateModelTests = false
+    generateApiTests = false
+    generateAliasAsModel = true
+    configOptions = [
+            delegatePattern: "true"
+    ]
+}
+
+tasks.openApiGenerate {
+    doLast {
+        delete (
+                "$buildDir/generated-sources/pom.xml",
+                "$buildDir/generated-sources/.openapi-generator-ignore",
+                "$buildDir/generated-sources/README.md",
+                "$buildDir/generated-sources/.openapi-generator",
+                "$buildDir/generated-sources/src/test/",
+                "$buildDir/generated-sources/src/main/java/org",
+        )
+    }
+}
+
+compileJava.dependsOn tasks.openApiGenerate
+
+tasks.named('test') {
+    useJUnitPlatform()
+}
