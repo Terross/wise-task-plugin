@@ -3,6 +3,7 @@ plugins {
     id 'org.springframework.boot' version '3.0.2'
     id 'io.spring.dependency-management' version '1.1.0'
     id 'org.openapi.generator' version '6.3.0'
+    id "org.flywaydb.flyway" version "9.15.1"
 }
 
 group = 'ru.leti'
@@ -14,7 +15,7 @@ configurations {
         extendsFrom annotationProcessor
     }
 }
-//
+
 sourceSets {
     main {
         java {
@@ -30,7 +31,7 @@ repositories {
         url = uri("https://maven.pkg.github.com/Terross/wise-task-library")
         credentials {
             username = 'Terross'
-            password = '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' //Eternal public token for library
+            password = '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' //Eternal public token for library
         }
     }
 }
@@ -38,6 +39,11 @@ repositories {
 dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-web'
     implementation 'ru.leti:wise-task-library:1.0.1'
+
+    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+    implementation 'org.postgresql:postgresql:42.1.4'
+//    implementation "org.flywaydb:flyway-core:9.15.1"
+
 
     //OpenAPI dependencies
     implementation 'com.google.code.findbugs:jsr305:3.0.2'
@@ -56,8 +62,11 @@ dependencies {
     compileOnly 'org.projectlombok:lombok'
     annotationProcessor 'org.projectlombok:lombok'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
+
 }
 
+
+//OpenAPI
 openApiGenerate {
     generatorName = 'spring'
     inputSpec = "$rootDir/src/main/resources/specs/wise-task-plugin-api.yaml".toString()
@@ -85,7 +94,19 @@ tasks.openApiGenerate {
     }
 }
 
+//Migration
+flyway {
+    driver = 'org.postgresql.Driver'
+    url = 'jdbc:postgresql://localhost:5432/wise_task_plugin'
+    user = 'wise_task_plugin'
+    password = 'wise_task_plugin'
+    schemas = ['wise_task_plugin']
+    locations = ['classpath:db/migration']
+}
+
+
 compileJava.dependsOn tasks.openApiGenerate
+flywayMigrate.dependsOn classes
 
 tasks.named('test') {
     useJUnitPlatform()
