@@ -41,7 +41,7 @@ dependencies {
     implementation 'ru.leti:wise-task-library:1.0.1'
 
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
-    implementation 'org.postgresql:postgresql:42.1.4'
+    implementation 'org.postgresql:postgresql:42.2.27'
 //    implementation "org.flywaydb:flyway-core:9.15.1"
 
 
@@ -96,17 +96,15 @@ tasks.openApiGenerate {
 
 //Migration
 flyway {
-    driver = 'org.postgresql.Driver'
     url = 'jdbc:postgresql://localhost:5432/wise_task_plugin'
     user = 'wise_task_plugin'
     password = 'wise_task_plugin'
-    schemas = ['wise_task_plugin']
-    locations = ['classpath:db/migration']
+    cleanDisabled = false
+    locations = ['filesystem:./src/main/resources/db/migration']
 }
 
 
 compileJava.dependsOn tasks.openApiGenerate
-flywayMigrate.dependsOn classes
 
 tasks.named('test') {
     useJUnitPlatform()

@@ -5,7 +5,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 import ru.leti.wise.task.plugin.api.PluginApiDelegate;
 import ru.leti.wise.task.plugin.model.CreateExternalPluginRequest;
-import ru.leti.wise.task.plugin.model.Plugin;
+import ru.leti.wise.task.plugin.domain.Plugin;
 import ru.leti.wise.task.plugin.model.VerifyPlugin200Response;
 import ru.leti.wise.task.plugin.model.VerifyPluginRequest;
 

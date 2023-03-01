@@ -124,3 +124,5 @@ components:
         pluginType:
           type: string
           enum: [graph]
+        isInternal:
+          type: boolean
