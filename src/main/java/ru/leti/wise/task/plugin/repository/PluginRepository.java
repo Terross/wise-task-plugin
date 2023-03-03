@@ -1,9 +1,12 @@
 package ru.leti.wise.task.plugin.repository;
 
 import org.springframework.data.repository.CrudRepository;
-import ru.leti.wise.task.plugin.domain.Plugin;
+import ru.leti.wise.task.plugin.domain.PluginEntity;
 
+import java.util.List;
 import java.util.UUID;
 
-public interface PluginRepository extends CrudRepository<Plugin, UUID> {
+public interface PluginRepository extends CrudRepository<PluginEntity, UUID> {
+
+    List<PluginEntity> findAll();
 }

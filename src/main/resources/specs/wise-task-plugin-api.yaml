@@ -88,8 +88,8 @@ paths:
           application/json:
             schema:
               properties:
-                graph:
-                  type: string
+                payload:
+                  $ref: "#/components/schemas/requestPayload"
       responses:
         200:
           description: "OK"
@@ -97,8 +97,8 @@ paths:
             application/json:
               schema:
                 properties:
-                  answer:
-                    type: boolean
+                  result:
+                    type: string
     delete:
       summary: Delete plugin by id
       operationId: deletePlugin
@@ -108,6 +108,13 @@ paths:
 
 components:
   schemas:
+    pluginType:
+      type: string
+      enum: [ graph ]
+    color:
+      type: string
+      enum: [ "red", "green", "blue" ]
+
     plugin:
       type: object
       properties:
@@ -122,7 +129,84 @@ components:
         authorId:
           type: string
         pluginType:
-          type: string
-          enum: [graph]
+          $ref: "#/components/schemas/pluginType"
         isInternal:
           type: boolean
+
+    requestPayload:
+      type: object
+      properties:
+        pluginType:
+          $ref: "#/components/schemas/pluginType"
+        mainPayload:
+          oneOf:
+            - $ref: "#/components/schemas/graph"
+          discriminator:
+            propertyName: objectType
+            mapping:
+              graph: "#/components/schemas/graph"
+        additionalData:
+          oneOf:
+            - $ref: "#/components/schemas/graph"
+            - $ref: "#/components/schemas/handWrittenAnswer"
+          discriminator:
+            propertyName: objectType
+            mapping:
+              graph: "#/components/schemas/graph"
+              handWrittenAnswer: "#/components/schemas/handWrittenAnswer"
+
+    handWrittenAnswer:
+      type: object
+      properties:
+        data:
+          type: string
+        objectType:
+          type: string
+
+    graph:
+      type: object
+      properties:
+        vertexCount:
+          type: integer
+        edgeCount:
+          type: integer
+        isDirect:
+          type: boolean
+        edges:
+          type: array
+          items:
+            $ref: "#/components/schemas/edge"
+        vertices:
+          type: array
+          items:
+            $ref: "#/components/schemas/vertex"
+        objectType:
+          type: string
+    edge:
+      type: object
+      properties:
+        source:
+          type: integer
+        target:
+          type: integer
+        color:
+            $ref: "#/components/schemas/color"
+        weight:
+          type: integer
+        label:
+          type: string
+    vertex:
+      type: object
+      properties:
+        id:
+          type: integer
+        color:
+          $ref: "#/components/schemas/color"
+        weight:
+          type: integer
+        label:
+          type: string
+        xCoordinate:
+          type: integer
+        yCoordinate:
+          type: integer
