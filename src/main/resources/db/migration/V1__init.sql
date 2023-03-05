@@ -1,4 +1,6 @@
-CREATE TYPE plugin_type AS ENUM ('GRAPH');
+CREATE SCHEMA IF NOT EXISTS wise_task_plugin ;
+
+CREATE TYPE wise_task_plugin.plugin_type AS ENUM ('GRAPH');
 
 CREATE TABLE wise_task_plugin.plugin  (
     id          UUID        NOT NULL    PRIMARY KEY,

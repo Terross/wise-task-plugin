@@ -116,3 +116,7 @@ tasks.named('test') {
 compileJava {
     options.compilerArgs += ['--enable-preview']
 }
+
+bootRun {
+    jvmArgs(['--enable-preview'])
+}

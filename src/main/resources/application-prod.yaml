@@ -8,4 +8,4 @@ spring:
     generate-ddl: false
     show-sql: true
 
-path-plugin: './plugins'
+path-plugin: "./plugins"

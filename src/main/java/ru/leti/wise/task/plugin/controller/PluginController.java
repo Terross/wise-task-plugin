@@ -5,6 +5,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 import ru.leti.wise.task.plugin.api.PluginApiDelegate;
+import ru.leti.wise.task.plugin.logic.GetPluginOperation;
 import ru.leti.wise.task.plugin.logic.GetPluginsOperation;
 import ru.leti.wise.task.plugin.logic.VerifyPluginOperation;
 import ru.leti.wise.task.plugin.model.CreateExternalPluginRequest;
@@ -12,6 +13,7 @@ import ru.leti.wise.task.plugin.model.VerifyPlugin200Response;
 import ru.leti.wise.task.plugin.model.VerifyPluginRequest;
 import ru.leti.wise.task.plugin.model.Plugin;
 import java.util.List;
+import java.util.UUID;
 
 @Component
 @RequiredArgsConstructor
@@ -19,7 +21,7 @@ public class PluginController implements PluginApiDelegate {
 
     private final GetPluginsOperation getPluginsOperation;
     private final VerifyPluginOperation verifyPluginOperation;
-
+    private final GetPluginOperation getPluginOperation;
     @Override
     public ResponseEntity<Plugin> createExternalPlugin(CreateExternalPluginRequest createExternalPluginRequest) {
         return PluginApiDelegate.super.createExternalPlugin(createExternalPluginRequest);
@@ -32,7 +34,7 @@ public class PluginController implements PluginApiDelegate {
 
     @Override
     public ResponseEntity<Plugin> getPlugin(String id) {
-        return PluginApiDelegate.super.getPlugin(id);
+        return ResponseEntity.ok(getPluginOperation.activate(UUID.fromString(id)));
     }
 
     @Override
