@@ -1,0 +1,21 @@
+version: '3.7'
+
+services:
+  wise_task_plugin:
+    build: .
+    depends_on:
+      - wise_task_plugin_db
+    container_name:  wise_task_plugin
+    ports:
+      - "8080:8080"
+    environment:
+      - SPRING_PROFILES_ACTIVE=prod
+  wise_task_plugin_db:
+    image: 'postgres:13.1-alpine'
+    container_name: wise_task_plugin_db
+    ports:
+      - "5432:5432"
+    environment:
+      - POSTGRES_USER=wise_task_plugin
+      - POSTGRES_PASSWORD=wise_task_plugin
+      - POSTGRES_DB=wise_task_plugin

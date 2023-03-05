@@ -1,0 +1,11 @@
+spring:
+  datasource:
+    url: jdbc:postgresql://wise_task_plugin_db:5432/wise_task_plugin
+    username: wise_task_plugin
+    password: wise_task_plugin
+    driver-class-name: org.postgresql.Driver
+  jpa:
+    generate-ddl: false
+    show-sql: true
+
+path-plugin: './plugins'

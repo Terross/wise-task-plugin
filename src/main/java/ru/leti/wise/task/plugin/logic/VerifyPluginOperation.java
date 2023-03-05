@@ -3,6 +3,7 @@ package ru.leti.wise.task.plugin.logic;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import ru.leti.wise.task.plugin.domain.PluginEntity;
+import ru.leti.wise.task.plugin.domain.external.ExternalPluginService;
 import ru.leti.wise.task.plugin.domain.internal.algorithm.InternalPluginService;
 import ru.leti.wise.task.plugin.model.VerifyPlugin200Response;
 import ru.leti.wise.task.plugin.model.VerifyPluginRequest;
@@ -16,6 +17,7 @@ public class VerifyPluginOperation {
 
     private final PluginRepository pluginRepository;
     private final InternalPluginService internalPluginService;
+    private final ExternalPluginService externalPluginService;
 
     public VerifyPlugin200Response activate(String id, VerifyPluginRequest verifyPluginRequest) {
 
@@ -28,9 +30,10 @@ public class VerifyPluginOperation {
                             verifyPluginRequest.getPayload().getMainPayload(),
                             verifyPluginRequest.getPayload().getAdditionalData()));
         } else {
-            //TODO: А если внешний плагин?
+           return new VerifyPlugin200Response()
+                   .result(externalPluginService.run(pluginEntity.getFileName(),
+                           verifyPluginRequest.getPayload().getMainPayload(),
+                           verifyPluginRequest.getPayload().getAdditionalData()));
         }
-
-        return null;
     }
 }
