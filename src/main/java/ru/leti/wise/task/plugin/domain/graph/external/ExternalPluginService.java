@@ -4,11 +4,10 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
+import ru.leti.wise.task.graph.model.Graph;
 import ru.leti.wise.task.plugin.Plugin;
 import ru.leti.wise.task.plugin.domain.PluginHandler;
 import ru.leti.wise.task.plugin.graph.GraphPlugin;
-import ru.leti.wise.task.plugin.model.RequestPayloadAdditionalData;
-import ru.leti.wise.task.plugin.model.RequestPayloadMainPayload;
 
 import java.io.File;
 import java.net.URL;
@@ -24,10 +23,10 @@ public class ExternalPluginService {
     @Value("${path-plugin}")
     private String basePath;
 
-    public String run(String className, RequestPayloadMainPayload mainPayload, RequestPayloadAdditionalData additionalData) {
+    public <T> String run(String className, Graph graph, T additionalData) {
 
         return switch (loadPluginFromJar(className)) {
-            case GraphPlugin p -> graphPluginHandler.run(p, mainPayload, additionalData);
+            case GraphPlugin p -> graphPluginHandler.run(p, graph, additionalData);
             default -> throw new IllegalStateException("Unexpected value: " + className);
         };
     }

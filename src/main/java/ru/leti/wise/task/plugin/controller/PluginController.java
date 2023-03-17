@@ -5,6 +5,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 import ru.leti.wise.task.plugin.api.PluginApiDelegate;
+import ru.leti.wise.task.plugin.logic.CreateExternalPluginOperation;
 import ru.leti.wise.task.plugin.logic.GetPluginOperation;
 import ru.leti.wise.task.plugin.logic.GetPluginsOperation;
 import ru.leti.wise.task.plugin.logic.VerifyPluginOperation;
@@ -22,9 +23,13 @@ public class PluginController implements PluginApiDelegate {
     private final GetPluginsOperation getPluginsOperation;
     private final VerifyPluginOperation verifyPluginOperation;
     private final GetPluginOperation getPluginOperation;
+    private final CreateExternalPluginOperation createExternalPluginOperation;
+
     @Override
     public ResponseEntity<Plugin> createExternalPlugin(CreateExternalPluginRequest createExternalPluginRequest) {
-        return PluginApiDelegate.super.createExternalPlugin(createExternalPluginRequest);
+        createExternalPluginOperation
+                .activate(createExternalPluginRequest.getPluginInfo(), createExternalPluginRequest.getPluginFile());
+        return ResponseEntity.ok(createExternalPluginRequest.getPluginInfo());
     }
 
     @Override
