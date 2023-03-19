@@ -30,7 +30,7 @@ paths:
                   $ref: "#/components/schemas/plugin"
                 pluginFile:
                   type: string
-                  format: binary
+                  format: base64
       responses:
         200:
           description: "OK"
@@ -124,7 +124,11 @@ components:
           type: string
         description:
           type: string
+        category:
+          type: string
         fileName:
+          type: string
+        beanName:
           type: string
         authorId:
           type: string
@@ -172,11 +176,11 @@ components:
           type: integer
         isDirect:
           type: boolean
-        edges:
+        edgeList:
           type: array
           items:
             $ref: "#/components/schemas/edge"
-        vertices:
+        vertexList:
           type: array
           items:
             $ref: "#/components/schemas/vertex"

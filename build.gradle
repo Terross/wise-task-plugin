@@ -31,21 +31,23 @@ repositories {
         url = uri("https://maven.pkg.github.com/Terross/wise-task-library")
         credentials {
             username = 'Terross'
-            password = 'ghp_Dn7eIsR5xy0EI    VZGGcjaKjQOrHrMfN3N0xb3' //Eternal public token for library
+            password = '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' //Eternal public token for library
         }
     }
 }
 
 dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-web'
-    implementation 'ru.leti:wise-task-library:1.0.2'
+    implementation 'ru.leti:wise-task-library:1.0.3'
 
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
     implementation 'org.postgresql:postgresql:42.2.27'
 
+    implementation 'commons-codec:commons-codec:1.15'
+
     implementation 'org.mapstruct:mapstruct:1.5.3.Final'
 
-    annotationProcessor 'org.projectlombok:lombok'
+    annotationProcessor 'org.projectlombok:lombok:1.18.26'
     annotationProcessor 'org.mapstruct:mapstruct-processor:1.5.3.Final'
 
 

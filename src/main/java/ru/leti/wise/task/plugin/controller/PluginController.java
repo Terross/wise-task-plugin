@@ -27,9 +27,7 @@ public class PluginController implements PluginApiDelegate {
 
     @Override
     public ResponseEntity<Plugin> createExternalPlugin(CreateExternalPluginRequest createExternalPluginRequest) {
-        createExternalPluginOperation
-                .activate(createExternalPluginRequest.getPluginInfo(), createExternalPluginRequest.getPluginFile());
-        return ResponseEntity.ok(createExternalPluginRequest.getPluginInfo());
+        return ResponseEntity.ok(createExternalPluginOperation.activate(createExternalPluginRequest));
     }
 
     @Override
@@ -45,11 +43,6 @@ public class PluginController implements PluginApiDelegate {
     @Override
     public ResponseEntity<List<Plugin>> getPlugins() {
         return ResponseEntity.ok(getPluginsOperation.activate());
-    }
-
-    @Override
-    public ResponseEntity<Plugin> updatePlugin(String id, CreateExternalPluginRequest createExternalPluginRequest) {
-        return PluginApiDelegate.super.updatePlugin(id, createExternalPluginRequest);
     }
 
     @Override

@@ -2,6 +2,7 @@ package ru.leti.wise.task.plugin.domain.graph.external;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.tomcat.util.http.fileupload.FileUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import ru.leti.wise.task.graph.model.Graph;
