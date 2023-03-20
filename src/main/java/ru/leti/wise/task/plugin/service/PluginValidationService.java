@@ -43,35 +43,16 @@ public class PluginValidationService {
 
     public boolean validate(PluginEntity pluginEntity, Path path) {
         Graph graph = graphGrpcService.getGraph();
-//        var future = executorService.submit(() -> testAbstractPlugin(pluginEntity, graph));
-
-        Thread.UncaughtExceptionHandler h = new Thread.UncaughtExceptionHandler() {
-            @Override
-            public void uncaughtException(Thread th, Throwable ex) {
-                System.out.println("Uncaught exception: " + ex);
-            }
-        };
-
-        Thread thread = new Thread(() -> testAbstractPlugin(pluginEntity, graph));
-        thread.setUncaughtExceptionHandler(h);
-        thread.start();
-
+        var future = executorService.submit(() -> testAbstractPlugin(pluginEntity, graph));
         try {
-            thread.join();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
+            future.get(timeLimit, TimeUnit.MILLISECONDS);
+        } catch (ExecutionException | InterruptedException e) {
+            deleteInvalidPluginFile(path);
+            throw new RuntimeException(e); //TODO понятные ошибки
+        } catch (TimeoutException e) {
+            deleteInvalidPluginFile(path);
+            return false;
         }
-//        try {
-//            future.get(timeLimit, TimeUnit.MILLISECONDS);
-//        } catch (ExecutionException | InterruptedException e) {
-//            future.cancel(true);
-//            executorService.shutdownNow();
-//            deleteInvalidPluginFile(path);
-//            throw new RuntimeException(e); //TODO понятные ошибки
-//        } catch (TimeoutException e) {
-//            deleteInvalidPluginFile(path);
-//            return false;
-//        }
         deleteInvalidPluginFile(path);
         return true;
     }
