@@ -1,0 +1,68 @@
+syntax = "proto3";
+
+package ru.leti;
+
+service GraphService {
+  rpc getGraphById (GetGraphByIdRequest) returns (GetGraphByIdResponse);
+  rpc createGraph (CreateGraphRequest) returns (CreateGraphResponse);
+  rpc generateRandomGraph (GenerateGraphRequest) returns (GenerateGraphResponse);
+}
+
+message GenerateGraphRequest {
+  int32 vertexCount = 1;
+  int32 edgeCount = 2;
+  bool isDirect = 3;
+}
+
+message GenerateGraphResponse {
+  Graph graph = 1;
+}
+
+message CreateGraphResponse {
+  Graph graph = 1;
+}
+
+message CreateGraphRequest {
+  Graph graph = 1;
+}
+
+message GetGraphByIdResponse {
+  Graph graph = 1;
+}
+
+message GetGraphByIdRequest {
+  string id = 1;
+}
+
+message Graph {
+  string id = 1;
+  int32 vertexCount = 2;
+  int32 edgeCount = 3;
+  bool isDirect = 4;
+  repeated Vertex vertexList = 5;
+  repeated Edge edgeList = 6;
+}
+
+message Vertex {
+  int32 id = 1;
+  int32 weight = 2;
+  string label = 3;
+  int32 xCoordinate = 4;
+  int32 yCoordinate = 5;
+  Color color = 6;
+}
+
+message Edge {
+  int32 source = 1;
+  int32 target = 2;
+  int32 weight = 3;
+  string label = 4;
+  Color color = 5;
+}
+
+enum Color {
+  GRAY = 0;
+  RED = 1;
+  BLUE = 2;
+  GREEN = 3;
+}

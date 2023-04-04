@@ -4,6 +4,7 @@ plugins {
     id 'io.spring.dependency-management' version '1.1.0'
     id 'org.openapi.generator' version '6.3.0'
     id "org.flywaydb.flyway" version "9.15.1"
+    id "com.google.protobuf" version "0.9.2"
 }
 
 group = 'ru.leti'
@@ -18,8 +19,11 @@ configurations {
 
 sourceSets {
     main {
+        proto {
+            srcDir 'src/main/resources/proto'
+        }
         java {
-            srcDirs += ["${buildDir}/generated-sources"]
+            srcDir "${buildDir}/generated/source/src"
         }
     }
 }
@@ -37,6 +41,13 @@ repositories {
 }
 
 dependencies {
+
+    //grpc dependencies
+    implementation 'io.github.lognet:grpc-spring-boot-starter:5.0.0'
+    implementation 'io.grpc:grpc-protobuf:1.53.0'
+    implementation 'io.grpc:grpc-stub:1.53.0'
+    implementation 'com.google.protobuf:protobuf-java-util:3.21.7'
+
     implementation 'org.springframework.boot:spring-boot-starter-web'
     implementation 'ru.leti:wise-task-library:1.0.3'
 
@@ -49,7 +60,8 @@ dependencies {
 
     annotationProcessor 'org.projectlombok:lombok:1.18.26'
     annotationProcessor 'org.mapstruct:mapstruct-processor:1.5.3.Final'
-
+    annotationProcessor 'no.entur.mapstruct.spi:protobuf-spi-impl:1.42'
+    annotationProcessor "org.springframework.boot:spring-boot-configuration-processor"
 
     //OpenAPI dependencies
     implementation 'com.google.code.findbugs:jsr305:3.0.2'
@@ -70,12 +82,31 @@ dependencies {
 
 }
 
+protobuf {
+    protoc {
+        artifact = "com.google.protobuf:protoc:3.21.7"
+    }
+    clean {
+        delete protobuf.generatedFilesBaseDir
+    }
+    plugins {
+        grpc {
+            artifact = "io.grpc:protoc-gen-grpc-java:1.53.0"
+        }
+    }
+    generateProtoTasks {
+        all()*.plugins {
+            grpc {}
+        }
+    }
+}
+
 
 //OpenAPI
 openApiGenerate {
     generatorName = 'spring'
     inputSpec = "$rootDir/src/main/resources/specs/wise-task-plugin-api.yaml".toString()
-    outputDir = "$buildDir/generated-sources".toString()
+    outputDir = "$buildDir/generated/source".toString()
     apiPackage = "ru.leti.wise.task.plugin.api"
     modelPackage = "ru.leti.wise.task.plugin.model"
     generateModelTests = false
@@ -89,12 +120,12 @@ openApiGenerate {
 tasks.openApiGenerate {
     doLast {
         delete (
-                "$buildDir/generated-sources/pom.xml",
-                "$buildDir/generated-sources/.openapi-generator-ignore",
-                "$buildDir/generated-sources/README.md",
-                "$buildDir/generated-sources/.openapi-generator",
-                "$buildDir/generated-sources/src/test/",
-                "$buildDir/generated-sources/src/main/java/org",
+                "$buildDir/generated/source/pom.xml",
+                "$buildDir/generated/source/.openapi-generator-ignore",
+                "$buildDir/generated/source/README.md",
+                "$buildDir/generated/source/.openapi-generator",
+                "$buildDir/generated/source/src/test/",
+                "$buildDir/generated/source/src/main/java/org",
         )
     }
 }

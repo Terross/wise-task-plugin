@@ -13,6 +13,7 @@ import ru.leti.wise.task.plugin.graph.GraphCharacteristic;
 import ru.leti.wise.task.plugin.graph.GraphProperty;
 import ru.leti.wise.task.plugin.graph.HandwrittenAnswer;
 import ru.leti.wise.task.plugin.graph.NewGraphConstruction;
+import ru.leti.wise.task.plugin.mapper.GraphMapper;
 import ru.leti.wise.task.plugin.service.grpc.GraphGrpcService;
 
 import java.nio.file.Files;
@@ -38,11 +39,12 @@ public class PluginValidationService {
     private final GraphGrpcService graphGrpcService;
     private final ExternalPluginService externalPluginService;
     private final PluginHandler graphPluginHandler;
+    private final GraphMapper graphMapper;
     private final ExecutorService executorService = Executors.newSingleThreadExecutor();
     private static final String TEST_HANDWRITTEN_ANSWER = "test";
 
     public boolean validate(PluginEntity pluginEntity, Path path) {
-        Graph graph = graphGrpcService.getGraph();
+        Graph graph = graphMapper.toGraph(graphGrpcService.getGraph());
         var future = executorService.submit(() -> testAbstractPlugin(pluginEntity, graph));
         try {
             future.get(timeLimit, TimeUnit.MILLISECONDS);

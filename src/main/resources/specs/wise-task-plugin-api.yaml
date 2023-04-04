@@ -106,6 +106,34 @@ paths:
         200:
           description: "OK"
 
+  /plugin/{id}/implementation:
+    parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+    post:
+      summary: Verify custom plugin implementation
+      operationId: verifyCustomPluginImplementation
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              properties:
+                implementation:
+                  type: string
+      responses:
+        200:
+          description: "OK"
+          content:
+            application/json:
+              schema:
+                properties:
+                  result:
+                    type: string
+
 components:
   schemas:
     pluginType:
