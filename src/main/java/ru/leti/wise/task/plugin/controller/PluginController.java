@@ -5,14 +5,13 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 import ru.leti.wise.task.plugin.api.PluginApiDelegate;
-import ru.leti.wise.task.plugin.logic.CreateExternalPluginOperation;
-import ru.leti.wise.task.plugin.logic.GetPluginOperation;
-import ru.leti.wise.task.plugin.logic.GetPluginsOperation;
-import ru.leti.wise.task.plugin.logic.VerifyPluginOperation;
+import ru.leti.wise.task.plugin.logic.*;
 import ru.leti.wise.task.plugin.model.CreateExternalPluginRequest;
+import ru.leti.wise.task.plugin.model.Plugin;
 import ru.leti.wise.task.plugin.model.VerifyPlugin200Response;
 import ru.leti.wise.task.plugin.model.VerifyPluginRequest;
-import ru.leti.wise.task.plugin.model.Plugin;
+import ru.leti.wise.task.plugin.model.VerifyCustomPluginImplementationRequest;
+
 import java.util.List;
 import java.util.UUID;
 
@@ -24,6 +23,14 @@ public class PluginController implements PluginApiDelegate {
     private final VerifyPluginOperation verifyPluginOperation;
     private final GetPluginOperation getPluginOperation;
     private final CreateExternalPluginOperation createExternalPluginOperation;
+    private final DeletePluginOperation deletePluginOperation;
+
+    @Override
+    public ResponseEntity<VerifyPlugin200Response>
+    verifyCustomPluginImplementation(String id,
+                                     VerifyCustomPluginImplementationRequest verifyCustomPluginImplementationRequest) {
+        return ResponseEntity.ok().build();
+    }
 
     @Override
     public ResponseEntity<Plugin> createExternalPlugin(CreateExternalPluginRequest createExternalPluginRequest) {
@@ -32,7 +39,8 @@ public class PluginController implements PluginApiDelegate {
 
     @Override
     public ResponseEntity<Void> deletePlugin(String id) {
-        return PluginApiDelegate.super.deletePlugin(id);
+        deletePluginOperation.activate(UUID.fromString(id));
+        return ResponseEntity.ok().build();
     }
 
     @Override
@@ -49,4 +57,10 @@ public class PluginController implements PluginApiDelegate {
     public ResponseEntity<VerifyPlugin200Response> verifyPlugin(String id, VerifyPluginRequest verifyPluginRequest) {
         return ResponseEntity.ok(verifyPluginOperation.activate(id, verifyPluginRequest));
     }
+
+    @Override
+    public ResponseEntity<Plugin> updatePlugin(String id, ru.leti.wise.task.plugin.model.UpdatePluginRequest updatePluginRequest) {
+        return PluginApiDelegate.super.updatePlugin(id, updatePluginRequest);
+    }
+
 }

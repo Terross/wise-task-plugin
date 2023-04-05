@@ -41,7 +41,7 @@ public class CreateExternalPluginOperation {
         Path path = Paths.get(pathPlugin + pluginEntity.getFileName() + ".jar").normalize().toAbsolutePath();
 
         saveFile(request.getPluginFile(), path);
-        if (pluginValidationService.validate(pluginEntity, path)) {
+        if (pluginValidationService.isValidate(pluginEntity, path)) {
             pluginRepository.save(pluginEntity);
         } else {
             throw new RuntimeException("Не хватило времени");//TODO понятные ошибки
@@ -56,4 +56,5 @@ public class CreateExternalPluginOperation {
             throw new RuntimeException(e);
         }
     }
+
 }
