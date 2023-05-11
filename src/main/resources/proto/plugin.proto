@@ -1,0 +1,78 @@
+syntax = "proto3";
+
+package ru.leti.wise.task.plugin;
+
+import "plugin_model.proto";
+import "google/protobuf/empty.proto";
+
+service PluginService {
+  rpc GetAllPlugins (google.protobuf.Empty) returns (GetAllPluginsResponse);
+  rpc CreatePlugin (CreatePluginRequest) returns (CreatePluginResponse);
+  rpc GetPlugin (GetPluginRequest) returns (GetPluginResponse);
+  rpc UpdatePlugin (UpdatePluginRequest) returns (UpdatePluginResponse);
+  rpc DeletePlugin (DeletePluginRequest) returns (DeletePluginResponse);
+  rpc CheckPluginSolution (CheckPluginSolutionRequest) returns (CheckPluginSolutionResponse);
+  rpc CheckPluginImplementation (CheckPluginSolutionRequest) returns (CheckPluginSolutionResponse);
+}
+
+//GetAllPlugins
+message GetAllPluginsResponse {
+  repeated Plugin plugin = 1;
+}
+
+//CreatePlugin
+message CreatePluginRequest {
+  Plugin plugin = 1;
+  string file = 2;
+}
+
+message CreatePluginResponse {
+  Plugin plugin = 1;
+}
+
+//GetPlugin
+message GetPluginRequest {
+  string id = 1;
+}
+
+message GetPluginResponse {
+  Plugin plugin = 1;
+}
+
+//UpdatePlugin
+message UpdatePluginRequest {
+  Plugin plugin = 1;
+  string file = 2;
+}
+
+message UpdatePluginResponse {
+  Plugin plugin = 1;
+}
+
+//DeletePlugin
+message DeletePluginRequest {
+  string id = 1;
+}
+
+message DeletePluginResponse {
+  string id = 1;
+}
+
+//CheckPluginSolution
+message CheckPluginSolutionRequest {
+  Solution solution = 1;
+}
+
+message CheckPluginSolutionResponse {
+  string result = 1;
+}
+
+//CheckPluginImplementation
+message CheckPluginImplementationRequest {
+  string id = 1;
+  string file = 2;
+}
+
+message CheckPluginImplementationResponse {
+  string result = 1;
+}
