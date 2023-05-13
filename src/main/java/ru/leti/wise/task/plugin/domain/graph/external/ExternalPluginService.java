@@ -7,6 +7,8 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import ru.leti.wise.task.graph.model.Graph;
 import ru.leti.wise.task.plugin.Plugin;
+import ru.leti.wise.task.plugin.PluginOuterClass;
+import ru.leti.wise.task.plugin.PluginOuterClass.Solution;
 import ru.leti.wise.task.plugin.domain.PluginHandler;
 import ru.leti.wise.task.plugin.graph.GraphPlugin;
 
@@ -24,10 +26,10 @@ public class ExternalPluginService {
     @Value("${path-plugin}")
     private String basePath;
 
-    public <T> String run(String className, Graph graph, T additionalData) {
+    public <T, P> String run(String className, Solution solution) {
 
         return switch (loadPluginFromJar(className)) {
-            case GraphPlugin p -> graphPluginHandler.run(p, graph, additionalData);
+            case GraphPlugin p -> graphPluginHandler.run(p, solution);
             default -> throw new IllegalStateException("Unexpected value: " + className);
         };
     }

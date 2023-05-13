@@ -3,6 +3,7 @@ package ru.leti.wise.task.plugin.domain;
 import jakarta.persistence.*;
 import lombok.Data;
 
+import javax.annotation.Nullable;
 import java.util.UUID;
 
 import static jakarta.persistence.EnumType.STRING;

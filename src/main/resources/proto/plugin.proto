@@ -2,77 +2,32 @@ syntax = "proto3";
 
 package ru.leti.wise.task.plugin;
 
-import "plugin_model.proto";
-import "google/protobuf/empty.proto";
+import "graph.proto";
 
-service PluginService {
-  rpc GetAllPlugins (google.protobuf.Empty) returns (GetAllPluginsResponse);
-  rpc CreatePlugin (CreatePluginRequest) returns (CreatePluginResponse);
-  rpc GetPlugin (GetPluginRequest) returns (GetPluginResponse);
-  rpc UpdatePlugin (UpdatePluginRequest) returns (UpdatePluginResponse);
-  rpc DeletePlugin (DeletePluginRequest) returns (DeletePluginResponse);
-  rpc CheckPluginSolution (CheckPluginSolutionRequest) returns (CheckPluginSolutionResponse);
-  rpc CheckPluginImplementation (CheckPluginSolutionRequest) returns (CheckPluginSolutionResponse);
+enum PluginType {
+  GRAPH = 0;
 }
 
-//GetAllPlugins
-message GetAllPluginsResponse {
-  repeated Plugin plugin = 1;
-}
-
-//CreatePlugin
-message CreatePluginRequest {
-  Plugin plugin = 1;
-  string file = 2;
-}
-
-message CreatePluginResponse {
-  Plugin plugin = 1;
-}
-
-//GetPlugin
-message GetPluginRequest {
+message Plugin {
   string id = 1;
+  string name = 2;
+  string description = 3;
+  string category = 4;
+  string fileName = 5;
+  string beanName = 6;
+  string authorId = 7;
+  PluginType pluginType = 8;
+  bool isInternal = 9;
 }
 
-message GetPluginResponse {
-  Plugin plugin = 1;
-}
-
-//UpdatePlugin
-message UpdatePluginRequest {
-  Plugin plugin = 1;
-  string file = 2;
-}
-
-message UpdatePluginResponse {
-  Plugin plugin = 1;
-}
-
-//DeletePlugin
-message DeletePluginRequest {
-  string id = 1;
-}
-
-message DeletePluginResponse {
-  string id = 1;
-}
-
-//CheckPluginSolution
-message CheckPluginSolutionRequest {
-  Solution solution = 1;
-}
-
-message CheckPluginSolutionResponse {
-  string result = 1;
-}
-
-//CheckPluginImplementation
-message CheckPluginImplementationRequest {
-  string id = 1;
-  string file = 2;
-}
-
-message CheckPluginImplementationResponse {
-  string result = 1;
+message Solution {
+  string pluginId = 1;
+  PluginType pluginType = 2;
+  oneof Payload {
+    ru.leti.wise.task.graph.Graph graph = 3;
+  }
+  oneof AdditionalPayload {
+    ru.leti.wise.task.graph.Graph otherGraph = 4;
+    string handwrittenAnswer = 5;
+  }
 }

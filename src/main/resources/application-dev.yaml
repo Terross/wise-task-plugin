@@ -15,5 +15,6 @@ grpc:
   service:
     graph:
       port: 6565
+  port: 6566
 server:
   port: 8081

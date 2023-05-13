@@ -1,9 +1,9 @@
 package ru.leti.wise.task.plugin.domain;
 
-import ru.leti.wise.task.graph.model.Graph;
 import ru.leti.wise.task.plugin.Plugin;
+import ru.leti.wise.task.plugin.PluginOuterClass.Solution;
 
 public interface PluginHandler {
 
-    <T> String run(Plugin plugin, Graph graph, T additionalData);
+    String run(Plugin plugin, Solution solution);
 }

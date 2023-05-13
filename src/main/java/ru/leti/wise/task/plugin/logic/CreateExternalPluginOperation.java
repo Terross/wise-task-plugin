@@ -4,10 +4,13 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
+import ru.leti.wise.task.plugin.PluginGrpc;
+import ru.leti.wise.task.plugin.PluginGrpc.CreatePluginRequest;
+import ru.leti.wise.task.plugin.PluginGrpc.CreatePluginResponse;
+import ru.leti.wise.task.plugin.PluginOuterClass;
+import ru.leti.wise.task.plugin.PluginOuterClass.Plugin;
 import ru.leti.wise.task.plugin.domain.PluginEntity;
 import ru.leti.wise.task.plugin.mapper.PluginMapper;
-import ru.leti.wise.task.plugin.model.CreateExternalPluginRequest;
-import ru.leti.wise.task.plugin.model.Plugin;
 import ru.leti.wise.task.plugin.repository.PluginRepository;
 import ru.leti.wise.task.plugin.service.PluginValidationService;
 
@@ -32,21 +35,23 @@ public class CreateExternalPluginOperation {
     private final PluginRepository pluginRepository;
     private final PluginValidationService pluginValidationService;
 
-    public Plugin activate(CreateExternalPluginRequest request) {
+    public CreatePluginResponse activate(CreatePluginRequest request) {
 
-        Plugin plugin = request.getPluginInfo();
+        Plugin plugin = request.getPlugin();
 
         PluginEntity pluginEntity = pluginMapper.pluginToPluginEntity(plugin);
 
         Path path = Paths.get(pathPlugin + pluginEntity.getFileName() + ".jar").normalize().toAbsolutePath();
 
-        saveFile(request.getPluginFile(), path);
+        saveFile(request.getFile(), path);
         if (pluginValidationService.isValidate(pluginEntity, path)) {
             pluginRepository.save(pluginEntity);
         } else {
             throw new RuntimeException("Не хватило времени");//TODO понятные ошибки
         }
-        return plugin;
+        return CreatePluginResponse.newBuilder()
+                .setPlugin(plugin)
+                .build();
     }
 
     private void saveFile(String base64Data, Path path) {

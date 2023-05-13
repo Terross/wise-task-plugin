@@ -4,8 +4,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
-import ru.leti.wise.task.graph.model.Graph;
 import ru.leti.wise.task.plugin.Plugin;
+import ru.leti.wise.task.plugin.PluginOuterClass.Solution;
 import ru.leti.wise.task.plugin.domain.PluginEntity;
 import ru.leti.wise.task.plugin.domain.PluginHandler;
 import ru.leti.wise.task.plugin.domain.graph.external.ExternalPluginService;
@@ -13,10 +13,8 @@ import ru.leti.wise.task.plugin.graph.GraphCharacteristic;
 import ru.leti.wise.task.plugin.graph.GraphProperty;
 import ru.leti.wise.task.plugin.graph.HandwrittenAnswer;
 import ru.leti.wise.task.plugin.graph.NewGraphConstruction;
-import ru.leti.wise.task.plugin.mapper.GraphMapper;
 import ru.leti.wise.task.plugin.service.grpc.GraphGrpcService;
 
-import java.net.ConnectException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.concurrent.*;
@@ -31,13 +29,11 @@ public class PluginValidationService {
     private final GraphGrpcService graphGrpcService;
     private final ExternalPluginService externalPluginService;
     private final PluginHandler graphPluginHandler;
-    private final GraphMapper graphMapper;
     private final ExecutorService executorService = Executors.newSingleThreadExecutor();
     private static final String TEST_HANDWRITTEN_ANSWER = "test";
 
     public boolean isValidate(PluginEntity pluginEntity, Path path) {
-        Graph graph = getGraph();
-        var future = executorService.submit(() -> testAbstractPlugin(pluginEntity, graph));
+        var future = executorService.submit(() -> testAbstractPlugin(pluginEntity));
         try {
             future.get(timeLimit, TimeUnit.MILLISECONDS);
         } catch (ExecutionException | InterruptedException e) {
@@ -51,25 +47,24 @@ public class PluginValidationService {
         return true;
     }
 
-    private Graph getGraph() {
-        return graphMapper.toGraph(graphGrpcService.getGraph());
-    }
-
-
     //TODO Доавить проверку типов при добавлении новых типов плагинов
-    private String testAbstractPlugin(PluginEntity pluginEntity, Graph graph) throws ConnectException {
+    private String testAbstractPlugin(PluginEntity pluginEntity) {
         System.out.println(Thread.currentThread().threadId());
         Plugin plugin = externalPluginService.loadPluginFromJar(pluginEntity.getFileName());
-        return graphPluginHandler.run(plugin, graph, prepareAdditionData(plugin));
+        return graphPluginHandler.run(plugin, prepareSolution(plugin));
     }
 
     @SuppressWarnings("unchecked")
-    private <T> T prepareAdditionData(Plugin plugin) throws ConnectException {
+    private Solution prepareSolution(Plugin plugin) {
+        var graph = graphGrpcService.getGraph();
+        var solutionBuilder = Solution.newBuilder();
         return switch (plugin) {
-            case GraphProperty p -> null;
-            case GraphCharacteristic p -> null;
-            case HandwrittenAnswer p -> (T) TEST_HANDWRITTEN_ANSWER;
-            case NewGraphConstruction p -> (T) getGraph();
+            case GraphProperty p -> solutionBuilder.setGraph(graph).build();
+            case GraphCharacteristic p -> solutionBuilder.setGraph(graph).build();
+            case HandwrittenAnswer p -> solutionBuilder.setGraph(graph)
+                    .setHandwrittenAnswer(TEST_HANDWRITTEN_ANSWER).build();
+            case NewGraphConstruction p -> solutionBuilder.setGraph(graph)
+                    .setOtherGraph(graphGrpcService.getGraph()).build();
             default -> throw new IllegalStateException("Unexpected value: " + plugin);
         };
     }

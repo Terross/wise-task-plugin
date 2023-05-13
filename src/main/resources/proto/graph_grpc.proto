@@ -1,0 +1,37 @@
+syntax = "proto3";
+
+package ru.leti.wise.task.graph;
+
+import "graph.proto";
+
+service GraphService {
+  rpc getGraphById (GetGraphByIdRequest) returns (GetGraphByIdResponse);
+  rpc createGraph (CreateGraphRequest) returns (CreateGraphResponse);
+  rpc generateRandomGraph (GenerateGraphRequest) returns (GenerateGraphResponse);
+}
+
+message GenerateGraphRequest {
+  int32 vertexCount = 1;
+  int32 edgeCount = 2;
+  bool isDirect = 3;
+}
+
+message GenerateGraphResponse {
+  Graph graph = 1;
+}
+
+message CreateGraphResponse {
+  Graph graph = 1;
+}
+
+message CreateGraphRequest {
+  Graph graph = 1;
+}
+
+message GetGraphByIdResponse {
+  Graph graph = 1;
+}
+
+message GetGraphByIdRequest {
+  string id = 1;
+}
