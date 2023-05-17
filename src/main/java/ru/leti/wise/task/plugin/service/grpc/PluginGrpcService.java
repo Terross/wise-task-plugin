@@ -5,6 +5,8 @@ import io.grpc.stub.StreamObserver;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.lognet.springboot.grpc.GRpcService;
+import ru.leti.wise.task.plugin.PluginGrpc;
+import ru.leti.wise.task.plugin.PluginGrpc.CheckPluginImplementationRequest;
 import ru.leti.wise.task.plugin.PluginGrpc.CheckPluginSolutionRequest;
 import ru.leti.wise.task.plugin.PluginGrpc.CheckPluginSolutionResponse;
 import ru.leti.wise.task.plugin.PluginGrpc.DeletePluginRequest;
@@ -72,8 +74,8 @@ public class PluginGrpcService extends PluginServiceImplBase {
     }
 
     @Override
-    public void checkPluginImplementation(CheckPluginSolutionRequest request,
-                                          StreamObserver<CheckPluginSolutionResponse> responseObserver) {
+    public void checkPluginImplementation(CheckPluginImplementationRequest request,
+                                          StreamObserver<PluginGrpc.CheckPluginImplementationResponse> responseObserver) {
         super.checkPluginImplementation(request, responseObserver);
     }
 }

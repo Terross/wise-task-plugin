@@ -12,7 +12,7 @@ service PluginService {
   rpc UpdatePlugin (UpdatePluginRequest) returns (UpdatePluginResponse);
   rpc DeletePlugin (DeletePluginRequest) returns (DeletePluginResponse);
   rpc CheckPluginSolution (CheckPluginSolutionRequest) returns (CheckPluginSolutionResponse);
-  rpc CheckPluginImplementation (CheckPluginSolutionRequest) returns (CheckPluginSolutionResponse);
+  rpc CheckPluginImplementation (CheckPluginImplementationRequest) returns (CheckPluginImplementationResponse);
 }
 
 //GetAllPlugins
