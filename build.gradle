@@ -50,6 +50,17 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
     implementation 'org.postgresql:postgresql:42.2.27'
 
+    // https://mvnrepository.com/artifact/org.springframework.cloud/spring-cloud-starter-sleuth
+    implementation 'org.springframework.cloud:spring-cloud-starter-sleuth:3.1.9'
+    // https://mvnrepository.com/artifact/org.springframework.cloud/spring-cloud-starter-sleuth
+    implementation 'org.springframework.cloud:spring-cloud-starter-sleuth:3.1.9'
+    // https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-actuator
+    implementation 'org.springframework.boot:spring-boot-starter-actuator:3.1.0'
+    // https://mvnrepository.com/artifact/org.springframework.cloud/spring-cloud-sleuth-brave
+    implementation 'org.springframework.cloud:spring-cloud-sleuth-brave:3.1.8'
+    // https://mvnrepository.com/artifact/com.wavefront/wavefront-spring-boot-starter
+    implementation 'com.wavefront:wavefront-spring-boot-starter:3.0.1'
+
     implementation 'commons-codec:commons-codec:1.15'
 
     implementation 'org.mapstruct:mapstruct:1.5.3.Final'

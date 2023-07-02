@@ -1,7 +1,6 @@
 package ru.leti.wise.task.plugin.service;
 
 import lombok.RequiredArgsConstructor;
-import lombok.SneakyThrows;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import ru.leti.wise.task.plugin.Plugin;
@@ -15,8 +14,6 @@ import ru.leti.wise.task.plugin.graph.HandwrittenAnswer;
 import ru.leti.wise.task.plugin.graph.NewGraphConstruction;
 import ru.leti.wise.task.plugin.service.grpc.GraphGrpcService;
 
-import java.nio.file.Files;
-import java.nio.file.Path;
 import java.util.concurrent.*;
 
 @Component
@@ -32,24 +29,20 @@ public class PluginValidationService {
     private final ExecutorService executorService = Executors.newSingleThreadExecutor();
     private static final String TEST_HANDWRITTEN_ANSWER = "test";
 
-    public boolean isValidate(PluginEntity pluginEntity, Path path) {
+    public boolean isValidate(PluginEntity pluginEntity) throws ExecutionException, InterruptedException {
         var future = executorService.submit(() -> testAbstractPlugin(pluginEntity));
         try {
             future.get(timeLimit, TimeUnit.MILLISECONDS);
         } catch (ExecutionException | InterruptedException e) {
-            deleteInvalidPluginFile(path);
-            throw new RuntimeException(e); //TODO понятные ошибки
+            throw e;
         } catch (TimeoutException e) {
-            deleteInvalidPluginFile(path);
             return false;
         }
-        deleteInvalidPluginFile(path);
         return true;
     }
 
     //TODO Доавить проверку типов при добавлении новых типов плагинов
     private String testAbstractPlugin(PluginEntity pluginEntity) {
-        System.out.println(Thread.currentThread().threadId());
         Plugin plugin = externalPluginService.loadPluginFromJar(pluginEntity.getFileName());
         return graphPluginHandler.run(plugin, prepareSolution(plugin));
     }
@@ -67,10 +60,5 @@ public class PluginValidationService {
                     .setOtherGraph(graphGrpcService.getGraph()).build();
             default -> throw new IllegalStateException("Unexpected value: " + plugin);
         };
-    }
-
-    @SneakyThrows
-    private void deleteInvalidPluginFile(Path path) {
-        Files.delete(path);
     }
 }
