@@ -23,7 +23,6 @@ message GetAllPluginsResponse {
 //CreatePlugin
 message CreatePluginRequest {
   Plugin plugin = 1;
-  string file = 2;
 }
 
 message CreatePluginResponse {
@@ -42,7 +41,6 @@ message GetPluginResponse {
 //UpdatePlugin
 message UpdatePluginRequest {
   Plugin plugin = 1;
-  string file = 2;
 }
 
 message UpdatePluginResponse {
@@ -74,5 +72,5 @@ message CheckPluginImplementationRequest {
 }
 
 message CheckPluginImplementationResponse {
-  string result = 1;
+  ImplementationResult implementation_result = 1;
 }

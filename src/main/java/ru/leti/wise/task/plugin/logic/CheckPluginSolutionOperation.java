@@ -6,8 +6,7 @@ import ru.leti.wise.task.plugin.PluginGrpc.CheckPluginSolutionRequest;
 import ru.leti.wise.task.plugin.PluginGrpc.CheckPluginSolutionResponse;
 import ru.leti.wise.task.plugin.PluginOuterClass.Solution;
 import ru.leti.wise.task.plugin.domain.PluginEntity;
-import ru.leti.wise.task.plugin.domain.graph.external.ExternalPluginService;
-import ru.leti.wise.task.plugin.domain.graph.internal.InternalPluginService;
+import ru.leti.wise.task.plugin.domain.graph.PluginService;
 import ru.leti.wise.task.plugin.error.BusinessException;
 import ru.leti.wise.task.plugin.error.ErrorCode;
 import ru.leti.wise.task.plugin.repository.PluginRepository;
@@ -19,8 +18,8 @@ import static java.util.UUID.fromString;
 public class CheckPluginSolutionOperation {
 
     private final PluginRepository pluginRepository;
-    private final InternalPluginService internalPluginService;
-    private final ExternalPluginService externalPluginService;
+    private final PluginService internalPluginService;
+    private final PluginService externalPluginService;
 
     public CheckPluginSolutionResponse activate(CheckPluginSolutionRequest request) {
 
@@ -34,14 +33,14 @@ public class CheckPluginSolutionOperation {
     }
 
     private CheckPluginSolutionResponse buildInternalPluginResponse(PluginEntity pluginEntity, Solution solution) {
-        var result = internalPluginService.run(pluginEntity.getBeanName(), solution);
+        var result = internalPluginService.run(pluginEntity, solution);
         return CheckPluginSolutionResponse.newBuilder()
                 .setResult(result)
                 .build();
     }
 
     private CheckPluginSolutionResponse buildExternalPluginResponse(PluginEntity pluginEntity, Solution solution) {
-        var result = externalPluginService.run(pluginEntity.getFileName(), solution);
+        var result = externalPluginService.run(pluginEntity, solution);
         return CheckPluginSolutionResponse.newBuilder()
                 .setResult(result)
                 .build();

@@ -12,11 +12,11 @@ public class GraphGrpcService {
 
     private final GraphStubHolder graphStubHolder;
 
-    public Graph getGraph() {
+    public Graph getGraph(int edgeCount, int vertexCount, boolean isDirect) {
         var request = GenerateGraphRequest.newBuilder()
-                .setEdgeCount(5)
-                .setVertexCount(3)
-                .setIsDirect(true)
+                .setEdgeCount(edgeCount)
+                .setVertexCount(vertexCount)
+                .setIsDirect(isDirect)
                 .build();
 
         return graphStubHolder.get().generateRandomGraph(request).getGraph();

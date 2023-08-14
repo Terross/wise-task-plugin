@@ -3,6 +3,7 @@ syntax = "proto3";
 package ru.leti.wise.task.plugin;
 
 import "graph.proto";
+import "google/protobuf/timestamp.proto";
 
 enum PluginType {
   GRAPH = 0;
@@ -13,11 +14,12 @@ message Plugin {
   string name = 2;
   string description = 3;
   string category = 4;
-  string fileName = 5;
-  string beanName = 6;
-  string authorId = 7;
-  PluginType pluginType = 8;
-  bool isInternal = 9;
+  string jarName = 5;
+  string jarFile = 6;
+  string beanName = 7;
+  string authorId = 8;
+  PluginType pluginType = 9;
+  bool isInternal = 10;
 }
 
 message Solution {
@@ -30,4 +32,15 @@ message Solution {
     ru.leti.wise.task.graph.Graph otherGraph = 4;
     string handwrittenAnswer = 5;
   }
+}
+
+message ImplementationResult {
+  string result = 1;
+  repeated GraphTestResult graph_task_result = 2;
+}
+
+message GraphTestResult {
+  string graph_id = 1;
+  int32 original_time_result = 2;
+  int32 time_result = 3;
 }

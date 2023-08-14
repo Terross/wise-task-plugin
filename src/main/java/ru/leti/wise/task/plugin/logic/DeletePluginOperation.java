@@ -17,22 +17,10 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class DeletePluginOperation {
 
-    @Value("${path-plugin:./plugins}")
-    private String pathPlugin;
-
     private final PluginRepository pluginRepository;
 
     public void activate(UUID id) {
-        var plugin = pluginRepository.findById(id)
-                .orElseThrow(() -> new BusinessException(ErrorCode.PLUGIN_NOT_FOUND));
-        Path path = Paths.get(pathPlugin + plugin.getFileName() + ".jar").normalize().toAbsolutePath();
-
-        deleteFile(path);
         pluginRepository.deleteById(id);
     }
 
-    @SneakyThrows
-    private void deleteFile(Path path) {
-        Files.delete(path);
-    }
 }

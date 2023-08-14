@@ -4,19 +4,22 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import ru.leti.wise.task.plugin.Plugin;
 import ru.leti.wise.task.plugin.PluginOuterClass.Solution;
+import ru.leti.wise.task.plugin.domain.PluginEntity;
 import ru.leti.wise.task.plugin.domain.PluginHandler;
+import ru.leti.wise.task.plugin.domain.graph.PluginService;
 import ru.leti.wise.task.plugin.graph.GraphPlugin;
 
 import java.util.Map;
 
 @Service
 @RequiredArgsConstructor
-public class InternalPluginService {
+public class InternalPluginService implements PluginService {
 
     private final Map<String, Plugin> plugins;
     private final PluginHandler graphPluginHandler;
 
-    public <T> String run(String pluginName, Solution solution) {
+    public String run(PluginEntity plugin, Solution solution) {
+        var pluginName = plugin.getBeanName();
         return switch (plugins.get(pluginName)) {
             case GraphPlugin p -> graphPluginHandler.run(p, solution);
             default -> throw new IllegalStateException("Unexpected value: " + plugins.get(pluginName));

@@ -14,6 +14,7 @@ message GenerateGraphRequest {
   int32 vertexCount = 1;
   int32 edgeCount = 2;
   bool isDirect = 3;
+  bool isSaved = 4;
 }
 
 message GenerateGraphResponse {
