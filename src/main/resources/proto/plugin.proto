@@ -6,7 +6,10 @@ import "graph.proto";
 import "google/protobuf/timestamp.proto";
 
 enum PluginType {
-  GRAPH = 0;
+  GRAPH_CHARACTERISTIC = 0;
+  GRAPH_PROPERTY = 1;
+  GRAPH_NEW_GRAPH = 2;
+  GRAPH_STRING = 3;
 }
 
 message Plugin {
@@ -35,12 +38,14 @@ message Solution {
 }
 
 message ImplementationResult {
-  string result = 1;
+  bool result = 1;
   repeated GraphTestResult graph_task_result = 2;
 }
 
 message GraphTestResult {
   string graph_id = 1;
-  int32 original_time_result = 2;
-  int32 time_result = 3;
+  int64 original_time_result = 2;
+  int64 time_result = 3;
+  string result = 4;
+  string original_result = 5;
 }
