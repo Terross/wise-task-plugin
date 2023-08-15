@@ -1,11 +1,12 @@
 package ru.leti.wise.task.plugin.domain;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.hibernate.annotations.JdbcType;
-import org.hibernate.annotations.Type;
 import org.hibernate.type.descriptor.jdbc.BinaryJdbcType;
-import org.hibernate.type.descriptor.jdbc.VarbinaryJdbcType;
 
 import java.util.UUID;
 
@@ -13,6 +14,9 @@ import static jakarta.persistence.EnumType.STRING;
 
 @Data
 @Entity
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 @Table(name = "plugin")
 public class PluginEntity {
 

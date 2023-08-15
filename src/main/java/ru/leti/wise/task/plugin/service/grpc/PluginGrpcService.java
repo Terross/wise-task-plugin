@@ -10,18 +10,7 @@ import org.lognet.springboot.grpc.recovery.GRpcExceptionHandler;
 import org.lognet.springboot.grpc.recovery.GRpcExceptionScope;
 import org.lognet.springboot.grpc.recovery.GRpcServiceAdvice;
 import ru.leti.wise.task.plugin.PluginGrpc;
-import ru.leti.wise.task.plugin.PluginGrpc.CheckPluginImplementationRequest;
-import ru.leti.wise.task.plugin.PluginGrpc.CheckPluginSolutionRequest;
-import ru.leti.wise.task.plugin.PluginGrpc.CheckPluginSolutionResponse;
-import ru.leti.wise.task.plugin.PluginGrpc.DeletePluginRequest;
-import ru.leti.wise.task.plugin.PluginGrpc.DeletePluginResponse;
-import ru.leti.wise.task.plugin.PluginGrpc.UpdatePluginRequest;
-import ru.leti.wise.task.plugin.PluginGrpc.UpdatePluginResponse;
-import ru.leti.wise.task.plugin.PluginGrpc.GetPluginRequest;
-import ru.leti.wise.task.plugin.PluginGrpc.GetPluginResponse;
-import ru.leti.wise.task.plugin.PluginGrpc.CreatePluginRequest;
-import ru.leti.wise.task.plugin.PluginGrpc.CreatePluginResponse;
-import ru.leti.wise.task.plugin.PluginGrpc.GetAllPluginsResponse;
+import ru.leti.wise.task.plugin.PluginGrpc.*;
 import ru.leti.wise.task.plugin.PluginServiceGrpc.PluginServiceImplBase;
 import ru.leti.wise.task.plugin.error.BusinessException;
 import ru.leti.wise.task.plugin.error.GrpcErrorHandler;
@@ -36,12 +25,13 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class PluginGrpcService extends PluginServiceImplBase {
 
-    private final GetPluginsOperation getPluginsOperation;
-    private final CheckPluginSolutionOperation checkPluginSolutionOperation;
     private final GetPluginOperation getPluginOperation;
-    private final CreateExternalPluginOperation createExternalPluginOperation;
+    private final GetPluginsOperation getPluginsOperation;
     private final DeletePluginOperation deletePluginOperation;
     private final UpdatePluginOperation updatePluginOperation;
+    private final CheckPluginSolutionOperation checkPluginSolutionOperation;
+    private final CreateExternalPluginOperation createExternalPluginOperation;
+    private final CheckPluginImplementationOperation checkPluginImplementationOperation;
 
     @Override
     public void getAllPlugins(Empty request, StreamObserver<GetAllPluginsResponse> responseObserver) {
@@ -84,7 +74,8 @@ public class PluginGrpcService extends PluginServiceImplBase {
     @Override
     public void checkPluginImplementation(CheckPluginImplementationRequest request,
                                           StreamObserver<PluginGrpc.CheckPluginImplementationResponse> responseObserver) {
-        super.checkPluginImplementation(request, responseObserver);
+        responseObserver.onNext(checkPluginImplementationOperation.activate(request));
+        responseObserver.onCompleted();
     }
 
     @GRpcServiceAdvice
