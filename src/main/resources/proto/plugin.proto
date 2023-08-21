@@ -39,7 +39,7 @@ message Solution {
 
 message ImplementationResult {
   bool result = 1;
-  repeated GraphTestResult graph_task_result = 2;
+  repeated GraphTestResult graph_test_results = 2;
 }
 
 message GraphTestResult {
