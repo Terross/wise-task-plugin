@@ -15,6 +15,7 @@ spring:
         jdbc:
           use_streams_for_binary: false
 
+
 path-plugin: "./plugins/"
 plugin-validation-limit: 30000000
 
