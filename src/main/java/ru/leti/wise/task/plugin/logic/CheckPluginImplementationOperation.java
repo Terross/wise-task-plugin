@@ -67,7 +67,7 @@ public class CheckPluginImplementationOperation {
         return CheckPluginImplementationResponse.newBuilder()
                 .setImplementationResult(PluginOuterClass.ImplementationResult.newBuilder()
                         .setResult(result)
-                        .addAllGraphTaskResult(graphTestResults)
+                        .addAllGraphTestResults(graphTestResults)
                         .build())
                 .build();
     }
@@ -81,7 +81,7 @@ public class CheckPluginImplementationOperation {
         final long originalDuration = System.nanoTime() - baseStartTime;
 
         final long newStartTime = System.nanoTime();
-        var newResult = internalPluginService.run(newPluginEntity, solution);
+        var newResult = externalPluginService.run(newPluginEntity, solution);
         final long newDuration = System.nanoTime() - newStartTime;
 
         return GraphTestResult.newBuilder()

@@ -4,15 +4,15 @@ services:
   wise_task_plugin:
     build: .
     depends_on:
-      - wise_task_plugin_db
+      - wise_task_db
     container_name:  wise_task_plugin
     ports:
       - "8080:8080"
     environment:
       - SPRING_PROFILES_ACTIVE=prod
-  wise_task_plugin_db:
+  wise_task_db:
     image: 'postgres:13.1-alpine'
-    container_name: wise_task_plugin_db
+    container_name: wise_task_db
     ports:
       - "5432:5432"
     environment:

@@ -18,11 +18,6 @@ spring:
 path-plugin: "./plugins/"
 plugin-validation-limit: 30000000
 
-wavefront:
-  application:
-    name: wise-task-plugin
-    service: wise-task-plugin
-
 logging:
   level:
     org.hibernate.SQL: DEBUG
@@ -34,6 +29,7 @@ grpc:
   service:
     graph:
       port: 6565
+      host: "localhost"
   port: 6566
 server:
   port: 8081

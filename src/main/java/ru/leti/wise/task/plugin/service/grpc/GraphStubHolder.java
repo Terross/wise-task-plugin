@@ -16,13 +16,15 @@ public class GraphStubHolder {
 
     @Value("${grpc.service.graph.port}")
     private int port;
+    @Value("${grpc.service.graph.host}")
+    private String host;
 
     private GraphServiceGrpc.GraphServiceBlockingStub graphServiceStub;
 
 
     @PostConstruct
     void init() {
-        graphServiceStub = newBlockingStub(forAddress("localhost", port).usePlaintext().build());
+        graphServiceStub = newBlockingStub(forAddress(host, port).usePlaintext().build());
     }
 
     GraphServiceGrpc.GraphServiceBlockingStub get() {
