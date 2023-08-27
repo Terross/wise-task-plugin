@@ -42,6 +42,7 @@ public class ExternalPluginService implements PluginService {
     }
 
     public Plugin loadPluginFromJar(PluginEntity plugin) {
+        makeBaseDir();
         File outputFile = new File("%s/%s.jar".formatted(basePath, plugin.getJarName() + randomUUID() + now()));
         try (FileOutputStream outputStream = new FileOutputStream(outputFile)) {
             outputStream.write(plugin.getJarFile());
@@ -53,6 +54,13 @@ public class ExternalPluginService implements PluginService {
             throw new RuntimeException(e);
         } finally {
             deleteTemporaryFile(outputFile);
+        }
+    }
+
+    private void makeBaseDir() {
+        File baseDir = new File(basePath);
+        if (!baseDir.exists()) {
+            baseDir.mkdirs();
         }
     }
 
