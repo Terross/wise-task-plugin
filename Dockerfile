@@ -1,4 +1,5 @@
-FROM eclipse-temurin:19-jdk-alpine
+FROM gradle:8.0.2-jdk19
 COPY . .
 EXPOSE 8080
-ENTRYPOINT ["./gradlew", "bootRun", "--args='--spring.profiles.active=prod'"]
+EXPOSE 6565
+CMD sh run.sh
