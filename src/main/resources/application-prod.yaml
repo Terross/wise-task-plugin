@@ -31,6 +31,6 @@ grpc:
     graph:
       port: 6565
       host: graph
-  port: 6565
+  port: 6566
 server:
   port: 8080
