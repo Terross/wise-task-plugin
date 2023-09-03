@@ -53,6 +53,14 @@ dependencies {
 
     implementation 'org.mapstruct:mapstruct:1.5.3.Final'
 
+    //observability
+    implementation 'io.micrometer:micrometer-tracing-bridge-brave'
+    implementation 'org.springframework.boot:spring-boot-starter-actuator'
+    implementation 'io.micrometer:micrometer-registry-prometheus'
+    implementation 'net.ttddyy.observation:datasource-micrometer-spring-boot:1.0.1'
+    implementation 'io.zipkin.reporter2:zipkin-reporter-brave'
+    implementation 'com.github.loki4j:loki-logback-appender:1.3.2'
+
     annotationProcessor 'org.projectlombok:lombok:1.18.26'
     annotationProcessor 'org.mapstruct:mapstruct-processor:1.5.3.Final'
     annotationProcessor 'no.entur.mapstruct.spi:protobuf-spi-impl:1.42'

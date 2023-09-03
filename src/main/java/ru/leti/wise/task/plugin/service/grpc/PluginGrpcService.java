@@ -3,6 +3,7 @@ package ru.leti.wise.task.plugin.service.grpc;
 import com.google.protobuf.Empty;
 import io.grpc.Status;
 import io.grpc.stub.StreamObserver;
+import io.micrometer.observation.annotation.Observed;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.lognet.springboot.grpc.GRpcService;
@@ -21,6 +22,7 @@ import ru.leti.wise.task.plugin.logic.*;
 import java.util.UUID;
 
 @Slf4j
+@Observed
 @GRpcService(interceptors = { LogInterceptor.class })
 @RequiredArgsConstructor
 public class PluginGrpcService extends PluginServiceImplBase {
