@@ -60,6 +60,7 @@ dependencies {
     implementation 'net.ttddyy.observation:datasource-micrometer-spring-boot:1.0.1'
     implementation 'io.zipkin.reporter2:zipkin-reporter-brave'
     implementation 'com.github.loki4j:loki-logback-appender:1.3.2'
+    implementation 'io.zipkin.brave:brave-instrumentation-grpc:5.16.0'
 
     annotationProcessor 'org.projectlombok:lombok:1.18.26'
     annotationProcessor 'org.mapstruct:mapstruct-processor:1.5.3.Final'
