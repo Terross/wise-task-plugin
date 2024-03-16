@@ -25,28 +25,35 @@ public class PluginEntity {
 
     private String name;
 
-    private String category;
-
     private String description;
 
-    @Column(name = "author_id")
-    private UUID authorId;
+    private String category;
 
-    @Column(name = "is_internal")
-    private Boolean isInternal;
-
-    @Column(name = "bean_name")
-    private String beanName;
-
-    @Column(name = "plugin_type")
-    @Enumerated(STRING)
-    private PluginType pluginType;
+    @Column(name = "jar_name")
+    private String jarName;
 
     @Lob
     @JdbcType(BinaryJdbcType.class)
     @Column(name = "jar_file")
     private byte[] jarFile;
 
-    @Column(name = "jar_name")
-    private String jarName;
+    @Column(name = "bean_name")
+    private String beanName;
+
+    @Column(name = "author_id")
+    private UUID authorId;
+
+    @Column(name = "graph_type")
+    @Enumerated(STRING)
+    private GraphType graphType;
+
+    @Column(name = "is_valid")
+    private Boolean isValid;
+
+    @Column(name = "plugin_type")
+    @Enumerated(STRING)
+    private PluginType pluginType;
+
+    @Column(name = "is_internal")
+    private Boolean isInternal;
 }

@@ -13,6 +13,7 @@ service PluginService {
   rpc DeletePlugin (DeletePluginRequest) returns (DeletePluginResponse);
   rpc CheckPluginSolution (CheckPluginSolutionRequest) returns (CheckPluginSolutionResponse);
   rpc CheckPluginImplementation (CheckPluginImplementationRequest) returns (CheckPluginImplementationResponse);
+  rpc ValidatePlugin (ValidatePluginRequest) returns (ValidatePluginResponse);
 }
 
 //GetAllPlugins
@@ -27,6 +28,15 @@ message CreatePluginRequest {
 
 message CreatePluginResponse {
   Plugin plugin = 1;
+}
+
+//Validate plugin
+message ValidatePluginRequest {
+  string id = 1;
+}
+
+message ValidatePluginResponse {
+  string id = 1;
 }
 
 //GetPlugin

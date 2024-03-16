@@ -3,6 +3,7 @@ package ru.leti.wise.task.plugin.mapper;
 import org.mapstruct.*;
 import ru.leti.wise.task.plugin.PluginOuterClass;
 import ru.leti.wise.task.plugin.PluginOuterClass.Plugin;
+import ru.leti.wise.task.plugin.domain.GraphType;
 import ru.leti.wise.task.plugin.domain.PluginEntity;
 import ru.leti.wise.task.plugin.domain.PluginType;
 
@@ -21,12 +22,18 @@ public interface PluginMapper {
     PluginEntity pluginToPluginEntity(Plugin plugin);
 
     @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
+    @Mapping(target = "jarFile", ignore = true)
+    @Mapping(target = "jarName", ignore = true)
     void updatePlugin(PluginEntity newPlugin, @MappingTarget PluginEntity oldPlugin);
 
     List<Plugin> pluginEntitiesToPlugins(List<PluginEntity> plugins);
 
     default PluginOuterClass.PluginType toPluginType(PluginType pluginType) {
         return PluginOuterClass.PluginType.valueOf(pluginType.name());
+    }
+
+    default PluginOuterClass.GraphType toGraphType(GraphType graphType) {
+        return PluginOuterClass.GraphType.valueOf(graphType.name());
     }
 
     @Condition

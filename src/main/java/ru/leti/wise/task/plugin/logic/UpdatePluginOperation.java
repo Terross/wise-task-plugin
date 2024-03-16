@@ -28,6 +28,8 @@ public class UpdatePluginOperation {
         pluginMapper.updatePlugin(requestPlugin, pluginEntity);
 
         if (requestPlugin.getJarFile() != null) {
+            pluginEntity.setJarFile(requestPlugin.getJarFile());
+            pluginEntity.setJarName(requestPlugin.getJarName());
             if (pluginValidationService.isValidate(requestPlugin)) {
                 pluginRepository.save(pluginEntity);
             } else {

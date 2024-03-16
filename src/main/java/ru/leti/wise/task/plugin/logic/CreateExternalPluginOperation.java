@@ -8,8 +8,13 @@ import ru.leti.wise.task.plugin.PluginGrpc.CreatePluginRequest;
 import ru.leti.wise.task.plugin.PluginGrpc.CreatePluginResponse;
 import ru.leti.wise.task.plugin.PluginOuterClass.Plugin;
 import ru.leti.wise.task.plugin.domain.PluginEntity;
+import ru.leti.wise.task.plugin.domain.PluginType;
 import ru.leti.wise.task.plugin.error.BusinessException;
 import ru.leti.wise.task.plugin.error.ErrorCode;
+import ru.leti.wise.task.plugin.graph.GraphCharacteristic;
+import ru.leti.wise.task.plugin.graph.GraphProperty;
+import ru.leti.wise.task.plugin.graph.HandwrittenAnswer;
+import ru.leti.wise.task.plugin.graph.NewGraphConstruction;
 import ru.leti.wise.task.plugin.mapper.PluginMapper;
 import ru.leti.wise.task.plugin.repository.PluginRepository;
 import ru.leti.wise.task.plugin.service.PluginValidationService;
@@ -29,7 +34,6 @@ public class CreateExternalPluginOperation {
         Plugin plugin = request.getPlugin();
 
         PluginEntity pluginEntity = pluginMapper.pluginToPluginEntity(plugin);
-
         boolean isValid = pluginValidationService.isValidate(pluginEntity);
         if (isValid) {
             pluginRepository.save(pluginEntity);

@@ -34,6 +34,7 @@ public class PluginGrpcService extends PluginServiceImplBase {
     private final CheckPluginSolutionOperation checkPluginSolutionOperation;
     private final CreateExternalPluginOperation createExternalPluginOperation;
     private final CheckPluginImplementationOperation checkPluginImplementationOperation;
+    private final ValidatePluginOperation validatePluginOperation;
 
     @Override
     public void getAllPlugins(Empty request, StreamObserver<GetAllPluginsResponse> responseObserver) {
@@ -77,6 +78,12 @@ public class PluginGrpcService extends PluginServiceImplBase {
     public void checkPluginImplementation(CheckPluginImplementationRequest request,
                                           StreamObserver<PluginGrpc.CheckPluginImplementationResponse> responseObserver) {
         responseObserver.onNext(checkPluginImplementationOperation.activate(request));
+        responseObserver.onCompleted();
+    }
+
+    @Override
+    public void validatePlugin(ValidatePluginRequest request, StreamObserver<ValidatePluginResponse> responseObserver) {
+        responseObserver.onNext(validatePluginOperation.activate(UUID.fromString(request.getId())));
         responseObserver.onCompleted();
     }
 
