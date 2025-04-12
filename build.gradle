@@ -44,7 +44,7 @@ dependencies {
     implementation 'com.google.protobuf:protobuf-java-util:3.21.7'
 
     implementation 'org.springframework.boot:spring-boot-starter-web'
-    implementation 'ru.leti:wise-task-library:1.0.3'
+    implementation 'ru.leti:wise-task-library:1.0.4'
 
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
     implementation 'org.postgresql:postgresql:42.2.27'
