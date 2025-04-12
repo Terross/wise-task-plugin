@@ -56,15 +56,19 @@ public class PluginValidationService {
     private Solution prepareSolution(Plugin plugin) {
         var graph = getGraph();
         var solutionBuilder = Solution.newBuilder();
-        return switch (plugin) {
-            case GraphProperty p -> solutionBuilder.setGraph(graph).build();
-            case GraphCharacteristic p -> solutionBuilder.setGraph(graph).build();
-            case HandwrittenAnswer p -> solutionBuilder.setGraph(graph)
+        if (plugin instanceof GraphProperty p) {
+            return solutionBuilder.setGraph(graph).build();
+        } else if (plugin instanceof GraphCharacteristic p) {
+            return solutionBuilder.setGraph(graph).build();
+        } else if (plugin instanceof HandwrittenAnswer p) {
+            return solutionBuilder.setGraph(graph)
                     .setHandwrittenAnswer(TEST_HANDWRITTEN_ANSWER).build();
-            case NewGraphConstruction p -> solutionBuilder.setGraph(graph)
+        } else if (plugin instanceof NewGraphConstruction p) {
+            return solutionBuilder.setGraph(graph)
                     .setOtherGraph(getGraph()).build();
-            default -> throw new IllegalStateException("Unexpected value: " + plugin);
-        };
+        } else {
+            throw new IllegalStateException("Unexpected value: " + plugin);
+        }
     }
 
     private GraphOuterClass.Graph getGraph() {

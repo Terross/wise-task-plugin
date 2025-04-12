@@ -35,10 +35,12 @@ public class ExternalPluginService implements PluginService {
 
     public String run(PluginEntity plugin, Solution solution) {
 
-        return switch (loadPluginFromJar(plugin)) {
-            case GraphPlugin p -> graphPluginHandler.run(p, solution);
-            default -> throw new IllegalStateException("Unexpected value in plugin " + plugin.getId());
-        };
+        if (loadPluginFromJar(plugin) instanceof GraphPlugin p) {
+            return graphPluginHandler.run(p, solution);
+        } else {
+            throw new IllegalStateException("Unexpected value in plugin " + plugin.getId());
+        }
+
     }
 
     public Plugin loadPluginFromJar(PluginEntity plugin) {

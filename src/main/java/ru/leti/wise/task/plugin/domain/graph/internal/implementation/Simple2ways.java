@@ -147,7 +147,7 @@ public class Simple2ways implements GraphProperty {
                 }
             }
 
-            currentPath.removeLast();
+            currentPath.remove(0);
         }
     }
 }

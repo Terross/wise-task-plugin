@@ -20,9 +20,10 @@ public class InternalPluginService implements PluginService {
 
     public String run(PluginEntity plugin, Solution solution) {
         var pluginName = plugin.getBeanName();
-        return switch (plugins.get(pluginName)) {
-            case GraphPlugin p -> graphPluginHandler.run(p, solution);
-            default -> throw new IllegalStateException("Unexpected value: " + plugins.get(pluginName));
-        };
+        if (plugins.get(pluginName) instanceof GraphPlugin p) {
+            return graphPluginHandler.run(p, solution);
+        } else {
+            throw new IllegalStateException("Unexpected value: " + plugins.get(pluginName));
+        }
     }
 }

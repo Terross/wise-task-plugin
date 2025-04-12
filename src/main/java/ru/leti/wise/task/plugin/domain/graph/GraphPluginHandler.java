@@ -25,12 +25,16 @@ public class GraphPluginHandler implements PluginHandler {
             throw new RuntimeException("Inconsistent graph plugin answer");
         }
         var graph = graphMapper.toGraph(solution.getGraph());
-        return switch (plugin) {
-            case GraphProperty p -> valueOf(p.run(graph));
-            case GraphCharacteristic p -> valueOf(p.run(graph));
-            case HandwrittenAnswer p -> valueOf(p.run(graph, solution.getHandwrittenAnswer()));
-            case NewGraphConstruction p -> valueOf(p.run(graph, graphMapper.toGraph(solution.getOtherGraph())));
-            default -> throw new IllegalStateException("Unexpected value: " + plugin);
-        };
+        if (plugin instanceof GraphProperty p) {
+            return  valueOf(p.run(graph));
+        } else if (plugin instanceof GraphCharacteristic p) {
+            return valueOf(p.run(graph));
+        } else if (plugin instanceof HandwrittenAnswer p) {
+            return valueOf(p.run(graph, solution.getHandwrittenAnswer()));
+        } else if (plugin instanceof NewGraphConstruction p) {
+            return valueOf(p.run(graph, graphMapper.toGraph(solution.getOtherGraph())));
+        } else {
+            throw new IllegalStateException("Unexpected value: " + plugin);
+        }
     }
 }
