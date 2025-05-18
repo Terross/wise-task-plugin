@@ -23,10 +23,11 @@ import java.util.UUID;
 
 @Slf4j
 @Observed
-@GRpcService(interceptors = { LogInterceptor.class })
+@GRpcService(interceptors = {LogInterceptor.class})
 @RequiredArgsConstructor
 public class PluginGrpcService extends PluginServiceImplBase {
 
+    private final IsOwnerPluginOperation isOwnerPluginOperation;
     private final GetPluginOperation getPluginOperation;
     private final GetPluginsOperation getPluginsOperation;
     private final DeletePluginOperation deletePluginOperation;
@@ -35,6 +36,12 @@ public class PluginGrpcService extends PluginServiceImplBase {
     private final CreateExternalPluginOperation createExternalPluginOperation;
     private final CheckPluginImplementationOperation checkPluginImplementationOperation;
     private final ValidatePluginOperation validatePluginOperation;
+
+    @Override
+    public void isOwnerPlugin(IsOwnerPluginRequest request, StreamObserver<IsOwnerPluginResponse> responseObserver) {
+        responseObserver.onNext(isOwnerPluginOperation.activate(request));
+        responseObserver.onCompleted();
+    }
 
     @Override
     public void getAllPlugins(Empty request, StreamObserver<GetAllPluginsResponse> responseObserver) {

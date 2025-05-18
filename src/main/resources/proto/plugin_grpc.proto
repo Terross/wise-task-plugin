@@ -6,6 +6,7 @@ import "plugin.proto";
 import "google/protobuf/empty.proto";
 
 service PluginService {
+  rpc isOwnerPlugin (IsOwnerPluginRequest) returns (IsOwnerPluginResponse);
   rpc GetAllPlugins (google.protobuf.Empty) returns (GetAllPluginsResponse);
   rpc CreatePlugin (CreatePluginRequest) returns (CreatePluginResponse);
   rpc GetPlugin (GetPluginRequest) returns (GetPluginResponse);
@@ -14,6 +15,18 @@ service PluginService {
   rpc CheckPluginSolution (CheckPluginSolutionRequest) returns (CheckPluginSolutionResponse);
   rpc CheckPluginImplementation (CheckPluginImplementationRequest) returns (CheckPluginImplementationResponse);
   rpc ValidatePlugin (ValidatePluginRequest) returns (ValidatePluginResponse);
+}
+
+
+
+//IsOwnerAnnotation
+message IsOwnerPluginRequest {
+  string user_id = 1;
+  string plugin_id = 2;
+}
+
+message IsOwnerPluginResponse {
+  bool result = 1;
 }
 
 //GetAllPlugins
