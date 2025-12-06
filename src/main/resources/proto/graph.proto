@@ -4,11 +4,14 @@ package ru.leti.wise.task.graph;
 
 message Graph {
   string id = 1;
-  int32 vertexCount = 2;
-  int32 edgeCount = 3;
-  bool isDirect = 4;
-  repeated Vertex vertexList = 5;
-  repeated Edge edgeList = 6;
+  string authorId = 2;
+  int32 vertexCount = 3;
+  int32 edgeCount = 4;
+  bool isDirect = 5;
+  repeated Vertex vertexList = 6;
+  repeated Edge edgeList = 7;
+  bool isNamed = 8;
+  string name = 9;
 }
 
 message Vertex {

@@ -18,7 +18,7 @@ public interface GraphMapper {
     Vertex toVertex(GraphOuterClass.Vertex vertex);
     Edge toEdge(GraphOuterClass.Edge edge);
 
-    @ValueMapping(target = MappingConstants.NULL, source = "UNRECOGNIZED")
-    @ValueMapping(target = MappingConstants.NULL, source = "GRAY")
+    @ValueMapping(target = "GRAY", source = "UNRECOGNIZED")
+    @ValueMapping(target = "GRAY", source = "GRAY")
     Color toColor(GraphOuterClass.Color color);
 }
