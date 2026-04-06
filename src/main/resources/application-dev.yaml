@@ -2,9 +2,9 @@ spring:
   application:
     name: wise-task-plugin
   datasource:
-    url: jdbc:postgresql://localhost:5432/wise_task_plugin
-    username: wise_task_plugin
-    password: wise_task_plugin
+    url: jdbc:postgresql://localhost:5432/${PLUGIN_DB}
+    username: ${PLUGIN_DB_USER}
+    password: ${PLUGIN_DB_PASSWORD}
     driver-class-name: org.postgresql.Driver
   jpa:
     generate-ddl: false
@@ -15,26 +15,24 @@ spring:
         jdbc:
           use_streams_for_binary: false
 
-path-plugin: "./plugins/"
-plugin-validation-limit: 30000000
+path-plugin: ${PLUGIN_PATH}
+plugin-validation-limit: ${PLUGIN_VALIDATION_LIMIT}
 
 logging:
   pattern:
     level: '%5p [${spring.application.name:},%X{traceId:-},%X{spanId:-}]'
   level:
-    org.hibernate.SQL: DEBUG
-    org.hibernate.type.descriptor.sql.BasicBinder: TRACE
-    org.hibernate.orm.jdbc.bind: TRACE
-    org.hibernate.type.descriptor.sql: TRACE
+    org.hibernate: ${LOGGING_LEVEL}
+    ru.leti.wise.task.plugin: ${LOGGING_LEVEL}
 
 grpc:
   service:
     graph:
-      port: 6565
-      host: "localhost"
-  port: 6566
+      port: ${GRAPH_GRPC_PORT}
+      host: localhost
+  port: ${PLUGIN_GRPC_PORT}
 server:
-  port: 8081
+  port: ${PLUGIN_PORT}
 
 management:
   tracing:
@@ -54,4 +52,4 @@ management:
             requests: true
   zipkin:
     tracing:
-      endpoint: http://${TEMPO_HOST:localhost}:${TEMPO_PORT:9411}/api/v2/spans
+      endpoint: http://localhost:9411/api/v2/spans
