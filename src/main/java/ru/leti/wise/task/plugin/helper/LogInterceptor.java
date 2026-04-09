@@ -16,7 +16,8 @@ public class LogInterceptor implements ServerInterceptor {
         return new GrpcForwardingServerCallListener<ReqT>(call.getMethodDescriptor(), listener) {
             @Override
             public void onMessage(ReqT message) {
-                log.info("Method: {}, Message: {}", methodName, message);
+                log.info("Method: {}", methodName);
+                log.debug("Message: {}", message);
                 super.onMessage(message);
             }
         };
