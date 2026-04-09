@@ -43,7 +43,8 @@ public class LogInterceptor implements ServerInterceptor {
 
         @Override
         public void sendMessage(RespT message) {
-            log.info("Method: {}, Response: {}", serverCall.getMethodDescriptor().getFullMethodName(), message);
+            log.info("Method: {}", serverCall.getMethodDescriptor().getFullMethodName());
+            log.debug("Response: {}", message);
             serverCall.sendMessage(message);
         }
 
