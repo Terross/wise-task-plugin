@@ -17,15 +17,13 @@ service PluginService {
   rpc ValidatePlugin (ValidatePluginRequest) returns (ValidatePluginResponse);
 }
 
-
-
-//IsOwnerAnnotation
+//IsOwnerPluginAnnotation
 message IsOwnerPluginRequest {
   string user_id = 1;
   string plugin_id = 2;
 }
 
-message IsOwnerPluginResponse {
+message IsOwnerPluginResponse{
   bool result = 1;
 }
 
@@ -89,7 +87,7 @@ message CheckPluginSolutionResponse {
 }
 
 //CheckPluginImplementation
-message CheckPluginImplementationRequest {
+message  CheckPluginImplementationRequest {
   string id = 1;
   string file = 2;
 }

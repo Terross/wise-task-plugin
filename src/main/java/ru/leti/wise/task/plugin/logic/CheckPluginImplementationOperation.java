@@ -17,11 +17,11 @@ import ru.leti.wise.task.plugin.service.PluginValidationService;
 import ru.leti.wise.task.plugin.service.grpc.GraphGrpcService;
 
 import java.util.ArrayList;
+import java.util.Base64;
 import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
 
 import static java.util.UUID.fromString;
-import static org.apache.tomcat.util.codec.binary.Base64.decodeBase64;
 import static ru.leti.wise.task.plugin.error.ErrorCode.INVALID_PLUGIN_IMPLEMENTATION_TYPE;
 import static ru.leti.wise.task.plugin.error.ErrorCode.PLUGIN_NOT_FOUND;
 
@@ -49,7 +49,7 @@ public class CheckPluginImplementationOperation {
         boolean result = true;
         var newPluginEntity = PluginEntity.builder()
                 .pluginType(basePluginEntity.getPluginType())
-                .jarFile(decodeBase64(request.getFile()))
+                .jarFile(Base64.getDecoder().decode(request.getFile()))
                 .jarName(basePluginEntity.getJarName())
                 .build();
 

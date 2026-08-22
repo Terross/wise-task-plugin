@@ -52,7 +52,6 @@ public class PluginValidationService {
         return graphPluginHandler.run(plugin, prepareSolution(plugin));
     }
 
-    @SuppressWarnings("unchecked")
     private Solution prepareSolution(Plugin plugin) {
         var graph = getGraph();
         var solutionBuilder = Solution.newBuilder();

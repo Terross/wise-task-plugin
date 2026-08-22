@@ -2,14 +2,15 @@ package ru.leti.wise.task.plugin.service.grpc;
 
 import com.google.protobuf.Empty;
 import io.grpc.Status;
+import io.grpc.StatusRuntimeException;
 import io.grpc.stub.StreamObserver;
 import io.micrometer.observation.annotation.Observed;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.lognet.springboot.grpc.GRpcService;
-import org.lognet.springboot.grpc.recovery.GRpcExceptionHandler;
-import org.lognet.springboot.grpc.recovery.GRpcExceptionScope;
-import org.lognet.springboot.grpc.recovery.GRpcServiceAdvice;
+
+import org.springframework.grpc.server.advice.GrpcAdvice;
+import org.springframework.grpc.server.advice.GrpcExceptionHandler;
+import org.springframework.grpc.server.service.GrpcService;
 import ru.leti.wise.task.plugin.PluginGrpc;
 import ru.leti.wise.task.plugin.PluginGrpc.*;
 import ru.leti.wise.task.plugin.PluginServiceGrpc.PluginServiceImplBase;
@@ -23,7 +24,7 @@ import java.util.UUID;
 
 @Slf4j
 @Observed
-@GRpcService(interceptors = {LogInterceptor.class})
+@GrpcService(interceptors = {LogInterceptor.class})
 @RequiredArgsConstructor
 public class PluginGrpcService extends PluginServiceImplBase {
 
@@ -94,19 +95,19 @@ public class PluginGrpcService extends PluginServiceImplBase {
         responseObserver.onCompleted();
     }
 
-    @GRpcServiceAdvice
+    @GrpcAdvice
     @RequiredArgsConstructor
     static class ErrorHandler {
         private final GrpcErrorHandler grpcErrorHandler;
 
-        @GRpcExceptionHandler
-        public Status handleBusinessException(BusinessException e, GRpcExceptionScope scope) {
-            return grpcErrorHandler.processBusinessError(e, scope);
+        @GrpcExceptionHandler
+        public Status handleBusinessException(BusinessException e) {
+            return grpcErrorHandler.processBusinessError(e);
         }
 
-        @GRpcExceptionHandler
-        public Status handlePluginExecutionException(PluginExecutionException e, GRpcExceptionScope scope) {
-            return grpcErrorHandler.processPluginError(e, scope);
+        @GrpcExceptionHandler
+        public StatusRuntimeException handlePluginExecutionException(PluginExecutionException e) {
+            return grpcErrorHandler.processPluginError(e);
         }
     }
 }
