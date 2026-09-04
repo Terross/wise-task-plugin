@@ -45,7 +45,7 @@ dependencies {
     implementation 'com.github.loki4j:loki-logback-appender:2.1.0'
 
     // Internal
-    implementation 'com.github.wisetask:wise-task-library:1.0.8'
+    implementation 'com.github.wisetask:wise-task-library:1.0.10'
 
     // Lombok
     compileOnly 'org.projectlombok:lombok:1.18.46'

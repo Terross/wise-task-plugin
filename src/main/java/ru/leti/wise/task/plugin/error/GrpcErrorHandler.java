@@ -9,13 +9,6 @@ import org.springframework.stereotype.Component;
 @Component
 @RequiredArgsConstructor
 public class GrpcErrorHandler {
-    public Status processBusinessError(BusinessException e) {
-        return switch (e.getErrorCode()) {
-            case PROFILE_NOT_FOUND -> Status.NOT_FOUND;
-            case INVALID_PASSWORD -> Status.UNAUTHENTICATED;
-            default -> Status.UNKNOWN;
-        };
-    }
 
     public StatusRuntimeException processPluginError(PluginExecutionException e) {
         var metadata = new Metadata();

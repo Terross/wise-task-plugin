@@ -102,7 +102,7 @@ public class PluginGrpcService extends PluginServiceImplBase {
 
         @GrpcExceptionHandler
         public Status handleBusinessException(BusinessException e) {
-            return grpcErrorHandler.processBusinessError(e);
+            return e.getStatus().withDescription(e.getMessage());
         }
 
         @GrpcExceptionHandler
