@@ -9,7 +9,8 @@ import ru.leti.wise.task.plugin.PluginOuterClass.GraphTestResult;
 import ru.leti.wise.task.plugin.PluginOuterClass.Solution;
 import ru.leti.wise.task.plugin.domain.PluginEntity;
 import ru.leti.wise.task.plugin.domain.PluginType;
-import ru.leti.wise.task.plugin.domain.graph.PluginService;
+import ru.leti.wise.task.plugin.domain.graph.external.ExternalPluginService;
+import ru.leti.wise.task.plugin.domain.graph.internal.InternalPluginService;
 import ru.leti.wise.task.plugin.error.BusinessException;
 import ru.leti.wise.task.plugin.error.ErrorCode;
 import ru.leti.wise.task.plugin.repository.PluginRepository;
@@ -31,8 +32,8 @@ public class CheckPluginImplementationOperation {
 
     private final PluginRepository pluginRepository;
     private final GraphGrpcService graphGrpcService;
-    private final PluginService externalPluginService;
-    private final PluginService internalPluginService;
+    private final ExternalPluginService externalPluginService;
+    private final InternalPluginService internalPluginService;
     private final PluginValidationService pluginValidationService;
 
     public CheckPluginImplementationResponse activate(CheckPluginImplementationRequest request) {

@@ -34,6 +34,10 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
     implementation 'org.postgresql:postgresql:42.7.12'
 
+    // Docker
+    implementation 'com.github.docker-java:docker-java-core:3.7.1'
+    implementation 'com.github.docker-java:docker-java-transport-httpclient5:3.7.1'
+
     // Observability (tracing, metrics, logs)
     implementation 'org.springframework.boot:spring-boot-starter-actuator'
     implementation 'org.springframework.boot:spring-boot-starter-opentelemetry'
@@ -41,7 +45,7 @@ dependencies {
     implementation 'com.github.loki4j:loki-logback-appender:2.1.0'
 
     // Internal
-    implementation 'com.github.wisetask:wise-task-library:1.0.8'\
+    implementation 'com.github.wisetask:wise-task-library:1.0.8'
 
     // Lombok
     compileOnly 'org.projectlombok:lombok:1.18.46'

@@ -8,8 +8,7 @@ import org.springframework.stereotype.Component;
 import ru.leti.wise.task.plugin.Plugin;
 import ru.leti.wise.task.plugin.PluginOuterClass.Solution;
 import ru.leti.wise.task.plugin.domain.PluginEntity;
-import ru.leti.wise.task.plugin.domain.PluginHandler;
-import ru.leti.wise.task.plugin.domain.graph.PluginService;
+import ru.leti.wise.task.plugin.domain.graph.GraphPluginHandler;
 import ru.leti.wise.task.plugin.graph.GraphPlugin;
 
 import java.io.File;
@@ -26,9 +25,9 @@ import static java.util.UUID.randomUUID;
 @Slf4j
 @Component
 @RequiredArgsConstructor
-public class ExternalPluginService implements PluginService {
+public class ExternalPluginService {
 
-    private final PluginHandler graphPluginHandler;
+    private final GraphPluginHandler graphPluginHandler;
 
     @Value("${path-plugin}")
     private String basePath;
@@ -40,7 +39,6 @@ public class ExternalPluginService implements PluginService {
         } else {
             throw new IllegalStateException("Unexpected value in plugin " + plugin.getId());
         }
-
     }
 
     public Plugin loadPluginFromJar(PluginEntity plugin) {

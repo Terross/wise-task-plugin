@@ -1,14 +1,14 @@
 package ru.leti.wise.task.plugin.repository;
 
 import io.micrometer.observation.annotation.Observed;
-import org.springframework.data.repository.CrudRepository;
+import org.springframework.data.jpa.repository.JpaRepository;
 import ru.leti.wise.task.plugin.domain.PluginEntity;
 
 import java.util.List;
 import java.util.UUID;
 
 @Observed
-public interface PluginRepository extends CrudRepository<PluginEntity, UUID> {
+public interface PluginRepository extends JpaRepository<PluginEntity, UUID> {
 
     List<PluginEntity> findAll();
 

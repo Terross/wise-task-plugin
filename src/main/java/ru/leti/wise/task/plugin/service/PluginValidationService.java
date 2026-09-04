@@ -8,7 +8,7 @@ import ru.leti.wise.task.graph.GraphOuterClass;
 import ru.leti.wise.task.plugin.Plugin;
 import ru.leti.wise.task.plugin.PluginOuterClass.Solution;
 import ru.leti.wise.task.plugin.domain.PluginEntity;
-import ru.leti.wise.task.plugin.domain.PluginHandler;
+import ru.leti.wise.task.plugin.domain.graph.GraphPluginHandler;
 import ru.leti.wise.task.plugin.domain.graph.external.ExternalPluginService;
 import ru.leti.wise.task.plugin.error.PluginExecutionException;
 import ru.leti.wise.task.plugin.graph.GraphCharacteristic;
@@ -17,26 +17,27 @@ import ru.leti.wise.task.plugin.graph.HandwrittenAnswer;
 import ru.leti.wise.task.plugin.graph.NewGraphConstruction;
 import ru.leti.wise.task.plugin.service.grpc.GraphGrpcService;
 
+import java.time.Duration;
 import java.util.concurrent.*;
 
 @Slf4j
 @Component
 @RequiredArgsConstructor
 public class PluginValidationService {
-
+    // TODO
     @Value("${plugin-validation-limit}")
-    private int timeLimit;
+    private Duration timeLimit;
 
     private final GraphGrpcService graphGrpcService;
     private final ExternalPluginService externalPluginService;
-    private final PluginHandler graphPluginHandler;
+    private final GraphPluginHandler graphPluginHandler;
     private final ExecutorService executorService = Executors.newSingleThreadExecutor();
     private static final String TEST_HANDWRITTEN_ANSWER = "test";
 
     public boolean isValidate(PluginEntity pluginEntity) {
         var future = executorService.submit(() -> testAbstractPlugin(pluginEntity));
         try {
-            future.get(timeLimit, TimeUnit.MILLISECONDS);
+            future.get(timeLimit.getSeconds(), TimeUnit.MILLISECONDS);
         } catch (ExecutionException | InterruptedException e) {
             log.error("", e);
             throw new PluginExecutionException(e.getMessage());
@@ -46,7 +47,7 @@ public class PluginValidationService {
         return true;
     }
 
-    //TODO Доавить проверку типов при добавлении новых типов плагинов
+    //TODO Добавить проверку типов при добавлении новых типов плагинов
     private String testAbstractPlugin(PluginEntity pluginEntity) {
         Plugin plugin = externalPluginService.loadPluginFromJar(pluginEntity);
         return graphPluginHandler.run(plugin, prepareSolution(plugin));
@@ -55,19 +56,14 @@ public class PluginValidationService {
     private Solution prepareSolution(Plugin plugin) {
         var graph = getGraph();
         var solutionBuilder = Solution.newBuilder();
-        if (plugin instanceof GraphProperty p) {
-            return solutionBuilder.setGraph(graph).build();
-        } else if (plugin instanceof GraphCharacteristic p) {
-            return solutionBuilder.setGraph(graph).build();
-        } else if (plugin instanceof HandwrittenAnswer p) {
-            return solutionBuilder.setGraph(graph)
+        return switch (plugin) {
+            case GraphProperty _, GraphCharacteristic _ -> solutionBuilder.setGraph(graph).build();
+            case HandwrittenAnswer _ -> solutionBuilder.setGraph(graph)
                     .setHandwrittenAnswer(TEST_HANDWRITTEN_ANSWER).build();
-        } else if (plugin instanceof NewGraphConstruction p) {
-            return solutionBuilder.setGraph(graph)
+            case NewGraphConstruction _ -> solutionBuilder.setGraph(graph)
                     .setOtherGraph(getGraph()).build();
-        } else {
-            throw new IllegalStateException("Unexpected value: " + plugin);
-        }
+            case null, default -> throw new IllegalStateException("Unexpected value: " + plugin);
+        };
     }
 
     private GraphOuterClass.Graph getGraph() {

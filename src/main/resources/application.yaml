@@ -20,6 +20,10 @@ spring:
         format_sql: true
         jdbc:
           use_streams_for_binary: false
+  docker:
+    host: unix:///var/run/docker.sock
+    connection-timeout: 30s
+    response-timeout: 45s
 
 
 path-plugin: ${PLUGIN_PATH:./plugins/}

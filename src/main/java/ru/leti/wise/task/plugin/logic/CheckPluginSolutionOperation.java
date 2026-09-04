@@ -6,25 +6,26 @@ import ru.leti.wise.task.plugin.PluginGrpc.CheckPluginSolutionRequest;
 import ru.leti.wise.task.plugin.PluginGrpc.CheckPluginSolutionResponse;
 import ru.leti.wise.task.plugin.PluginOuterClass.Solution;
 import ru.leti.wise.task.plugin.domain.PluginEntity;
-import ru.leti.wise.task.plugin.domain.graph.PluginService;
+import ru.leti.wise.task.plugin.domain.graph.external.ExternalPluginService;
+import ru.leti.wise.task.plugin.domain.graph.internal.InternalPluginService;
 import ru.leti.wise.task.plugin.error.BusinessException;
 import ru.leti.wise.task.plugin.error.ErrorCode;
 import ru.leti.wise.task.plugin.repository.PluginRepository;
 
-import static java.util.UUID.fromString;
+import java.util.UUID;
 
 @Component
 @RequiredArgsConstructor
 public class CheckPluginSolutionOperation {
 
     private final PluginRepository pluginRepository;
-    private final PluginService internalPluginService;
-    private final PluginService externalPluginService;
+    private final InternalPluginService internalPluginService;
+    private final ExternalPluginService externalPluginService;
 
     public CheckPluginSolutionResponse activate(CheckPluginSolutionRequest request) {
 
         var solution = request.getSolution();
-        PluginEntity pluginEntity = pluginRepository.findById(fromString(solution.getPluginId()))
+        PluginEntity pluginEntity = pluginRepository.findById(UUID.fromString(solution.getPluginId()))
                 .orElseThrow(() -> new BusinessException(ErrorCode.PLUGIN_NOT_FOUND));
 
         return pluginEntity.getIsInternal()
