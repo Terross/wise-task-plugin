@@ -23,13 +23,17 @@ import ru.leti.wise.task.plugin.PluginOuterClass;
 import ru.leti.wise.task.plugin.configuration.props.DockerProperties;
 import ru.leti.wise.task.plugin.domain.PluginEntity;
 import ru.leti.wise.task.plugin.error.BusinessException;
+import ru.leti.wise.task.plugin.error.PluginExecutionException;
 import ru.leti.wise.task.plugin.mapper.GraphMapper;
 
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
+import java.util.regex.Pattern;
 
 @Slf4j
 @Component
@@ -45,6 +49,8 @@ public class JarExecutor {
     @Value("${spring.plugin.runner}")
     private Resource runnerJar;
 
+    private final Pattern exceptionRegex = Pattern.compile("exception", Pattern.CASE_INSENSITIVE);
+
     @PostConstruct
     public void postConstruct() {
         tempFolderPath = Paths.get(tempFolder).toAbsolutePath().normalize();
@@ -54,7 +60,6 @@ public class JarExecutor {
     public String executeJar(PluginEntity plugin, PluginOuterClass.Solution solution) {
         String containerId = null;
         Path pluginPath = null;
-        Path resultPath = null;
         Path runnerPath = null;
         Path graphPath = null;
         try {
@@ -104,7 +109,7 @@ public class JarExecutor {
             String result;
             try {
                 var exitCode = callback.awaitStatusCode(properties.containerWorkTimeout().getSeconds(), TimeUnit.SECONDS);
-                StringBuilder logs = new StringBuilder();
+                List<String> logsBuilder = new ArrayList<>();
                 dockerClient.logContainerCmd(containerId)
                         .withStdOut(true)
                         .withStdErr(true)
@@ -112,13 +117,17 @@ public class JarExecutor {
                         .exec(new ResultCallback.Adapter<Frame>() {
                             @Override
                             public void onNext(Frame frame) {
-                                logs.append(new String(frame.getPayload()));
+                                logsBuilder.add(new String(frame.getPayload()));
                             }
                         })
                         .awaitCompletion(5, TimeUnit.SECONDS);
-                log.info("Container logs: {}", logs);
                 log.info("Container exited with: {}", exitCode.toString());
-                result = logs.toString();
+
+                String logs = String.join("\n", logsBuilder);
+                if(exceptionRegex.matcher(logs).find()){
+                    throw new PluginExecutionException(logs);
+                }
+                result = logsBuilder.getLast();
             } catch (DockerClientException e) {
                 dockerClient.stopContainerCmd(container.getId()).withTimeout(5).exec();
                 throw new BusinessException(Status.DEADLINE_EXCEEDED,
@@ -142,7 +151,6 @@ public class JarExecutor {
 
             try {
                 if (pluginPath != null) Files.deleteIfExists(pluginPath);
-                if (resultPath != null) Files.deleteIfExists(resultPath);
                 if (runnerPath != null) Files.deleteIfExists(runnerPath);
                 if (graphPath != null) Files.deleteIfExists(graphPath);
             } catch (Exception e) {

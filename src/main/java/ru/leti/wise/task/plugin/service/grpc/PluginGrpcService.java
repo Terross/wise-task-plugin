@@ -1,6 +1,5 @@
 package ru.leti.wise.task.plugin.service.grpc;
 
-import com.google.protobuf.Empty;
 import io.grpc.Status;
 import io.grpc.stub.StreamObserver;
 import io.micrometer.observation.annotation.Observed;
@@ -13,6 +12,7 @@ import ru.leti.wise.task.plugin.PluginGrpc;
 import ru.leti.wise.task.plugin.PluginGrpc.*;
 import ru.leti.wise.task.plugin.PluginServiceGrpc.PluginServiceImplBase;
 import ru.leti.wise.task.plugin.error.BusinessException;
+import ru.leti.wise.task.plugin.error.PluginExecutionException;
 import ru.leti.wise.task.plugin.helper.LogInterceptor;
 import ru.leti.wise.task.plugin.logic.*;
 
@@ -33,12 +33,12 @@ public class PluginGrpcService extends PluginServiceImplBase {
     private final CheckPluginImplementationOperation checkPluginImplementationOperation;
     private final ValidatePluginOperation validatePluginOperation;
 
-    @Override
-    public void getAllPlugins(Empty request, StreamObserver<GetAllPluginsResponse> responseObserver) {
-        responseObserver.onNext(getPluginsOperation.activate());
-        responseObserver.onCompleted();
-    }
 
+    @Override
+    public void getAllPlugins(GetAllPluginRequest request, StreamObserver<GetAllPluginsResponse> responseStreamObserver){
+        responseStreamObserver.onNext(getPluginsOperation.activate(request));
+        responseStreamObserver.onCompleted();
+    }
     @Override
     public void getPlugin(GetPluginRequest request, StreamObserver<GetPluginResponse> responseObserver) {
         responseObserver.onNext(getPluginOperation.activate(UUID.fromString(request.getId())));
@@ -90,6 +90,11 @@ public class PluginGrpcService extends PluginServiceImplBase {
         @GrpcExceptionHandler
         public Status handleBusinessException(BusinessException e) {
             return e.getStatus().withDescription(e.getMessage());
+        }
+
+        @GrpcExceptionHandler
+        public Status handeRuntimeException(PluginExecutionException e) {
+            return Status.INTERNAL.withDescription("Произошла ошибка при выполнении плагина: " + e.getPluginLogs());
         }
     }
 }
