@@ -1,5 +1,6 @@
 package ru.leti.wise.task.plugin.logic;
 
+import io.grpc.Status;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import ru.leti.wise.task.plugin.PluginGrpc.CheckPluginSolutionRequest;
@@ -17,7 +18,6 @@ import java.util.UUID;
 @Component
 @RequiredArgsConstructor
 public class CheckPluginSolutionOperation {
-
     private final PluginRepository pluginRepository;
     private final InternalPluginService internalPluginService;
     private final ExternalPluginService externalPluginService;
@@ -25,8 +25,12 @@ public class CheckPluginSolutionOperation {
     public CheckPluginSolutionResponse activate(CheckPluginSolutionRequest request) {
 
         var solution = request.getSolution();
-        PluginEntity pluginEntity = pluginRepository.findById(UUID.fromString(solution.getPluginId()))
-                .orElseThrow(() -> new BusinessException(ErrorCode.PLUGIN_NOT_FOUND));
+        var pluginId = UUID.fromString(solution.getPluginId());
+        PluginEntity pluginEntity = pluginRepository.findById(pluginId)
+                .orElseThrow(() -> new BusinessException(Status.NOT_FOUND,
+                                "Плагин с id: %s не найден".formatted(pluginId)
+                        )
+                );
 
         return pluginEntity.getIsInternal()
                 ? buildInternalPluginResponse(pluginEntity, solution)

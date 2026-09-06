@@ -2,12 +2,10 @@ package ru.leti.wise.task.plugin.service.grpc;
 
 import com.google.protobuf.Empty;
 import io.grpc.Status;
-import io.grpc.StatusRuntimeException;
 import io.grpc.stub.StreamObserver;
 import io.micrometer.observation.annotation.Observed;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-
 import org.springframework.grpc.server.advice.GrpcAdvice;
 import org.springframework.grpc.server.advice.GrpcExceptionHandler;
 import org.springframework.grpc.server.service.GrpcService;
@@ -15,8 +13,6 @@ import ru.leti.wise.task.plugin.PluginGrpc;
 import ru.leti.wise.task.plugin.PluginGrpc.*;
 import ru.leti.wise.task.plugin.PluginServiceGrpc.PluginServiceImplBase;
 import ru.leti.wise.task.plugin.error.BusinessException;
-import ru.leti.wise.task.plugin.error.GrpcErrorHandler;
-import ru.leti.wise.task.plugin.error.PluginExecutionException;
 import ru.leti.wise.task.plugin.helper.LogInterceptor;
 import ru.leti.wise.task.plugin.logic.*;
 
@@ -28,7 +24,6 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class PluginGrpcService extends PluginServiceImplBase {
 
-    private final IsOwnerPluginOperation isOwnerPluginOperation;
     private final GetPluginOperation getPluginOperation;
     private final GetPluginsOperation getPluginsOperation;
     private final DeletePluginOperation deletePluginOperation;
@@ -37,12 +32,6 @@ public class PluginGrpcService extends PluginServiceImplBase {
     private final CreateExternalPluginOperation createExternalPluginOperation;
     private final CheckPluginImplementationOperation checkPluginImplementationOperation;
     private final ValidatePluginOperation validatePluginOperation;
-
-    @Override
-    public void isOwnerPlugin(IsOwnerPluginRequest request, StreamObserver<IsOwnerPluginResponse> responseObserver) {
-        responseObserver.onNext(isOwnerPluginOperation.activate(request));
-        responseObserver.onCompleted();
-    }
 
     @Override
     public void getAllPlugins(Empty request, StreamObserver<GetAllPluginsResponse> responseObserver) {
@@ -97,17 +86,10 @@ public class PluginGrpcService extends PluginServiceImplBase {
 
     @GrpcAdvice
     @RequiredArgsConstructor
-    static class ErrorHandler {
-        private final GrpcErrorHandler grpcErrorHandler;
-
+    public static class ErrorHandler {
         @GrpcExceptionHandler
         public Status handleBusinessException(BusinessException e) {
             return e.getStatus().withDescription(e.getMessage());
-        }
-
-        @GrpcExceptionHandler
-        public StatusRuntimeException handlePluginExecutionException(PluginExecutionException e) {
-            return grpcErrorHandler.processPluginError(e);
         }
     }
 }

@@ -29,6 +29,7 @@ spring:
     container-work-timeout: 10s
   plugin:
     temp-folder: "./plugin"
+    runner: file:src/main/resources/runner.jar
 
 
 path-plugin: ${PLUGIN_PATH:./plugins/}

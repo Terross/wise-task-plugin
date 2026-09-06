@@ -6,7 +6,6 @@ import "plugin.proto";
 import "google/protobuf/empty.proto";
 
 service PluginService {
-  rpc isOwnerPlugin (IsOwnerPluginRequest) returns (IsOwnerPluginResponse);
   rpc GetAllPlugins (google.protobuf.Empty) returns (GetAllPluginsResponse);
   rpc CreatePlugin (CreatePluginRequest) returns (CreatePluginResponse);
   rpc GetPlugin (GetPluginRequest) returns (GetPluginResponse);
